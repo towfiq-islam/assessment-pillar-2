@@ -1,9 +1,6 @@
-
-import React from 'react';
-
 const page = () => {
   return (
-    <div>
+    <div className='bg-red-500'>
       Home
     </div>
   );
