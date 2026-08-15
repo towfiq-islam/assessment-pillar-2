@@ -1,29 +1,13 @@
 "use client";
-import { CartItem } from "@/types/cart";
 import Link from "next/link";
 import { FiLock, FiTag } from "react-icons/fi";
 
-interface CartOrderSummaryProps {
-  items: CartItem[];
-}
-
-const currency = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 2,
-});
-
+const SUBTOTAL = 4056;
 const SHIPPING = 24;
-const TAX_RATE = 0.08;
+const TAX = 324.48;
+const TOTAL = SUBTOTAL + SHIPPING + TAX;
 
-export function CartOrderSummary({ items }: CartOrderSummaryProps) {
-  const subtotal = items.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0,
-  );
-
-  const tax = subtotal * TAX_RATE;
-  const total = subtotal + SHIPPING + tax;
+export function CartOrderSummary() {
 
   return (
     <aside className="animate-fade-up rounded-xl border border-gray-200 bg-white p-4 md:p-5 shadow-sm">
@@ -34,25 +18,19 @@ export function CartOrderSummary({ items }: CartOrderSummaryProps) {
       <div className="mt-4 space-y-2.5 text-sm">
         <div className="flex items-center justify-between text-gray-500">
           <span>Subtotal</span>
-          <span className="font-medium text-gray-900">
-            {currency.format(subtotal)}
-          </span>
+          <span className="font-medium text-gray-900">${SUBTOTAL}</span>
         </div>
 
         <div className="flex items-center justify-between text-gray-500">
           <span>Shipping</span>
 
-          <span className="font-medium text-gray-900">
-            {currency.format(SHIPPING)}
-          </span>
+          <span className="font-medium text-gray-900">${SHIPPING}</span>
         </div>
 
         <div className="flex items-center justify-between text-gray-500">
           <span>Estimated tax</span>
 
-          <span className="font-medium text-gray-900">
-            {currency.format(tax)}
-          </span>
+          <span className="font-medium text-gray-900">${TAX}</span>
         </div>
       </div>
 
@@ -78,9 +56,7 @@ export function CartOrderSummary({ items }: CartOrderSummaryProps) {
       <div className="mt-5 flex items-center justify-between border-t border-gray-200 pt-4">
         <span className="text-lg font-bold text-gray-900">Total</span>
 
-        <span className="text-lg font-bold text-gray-900">
-          {currency.format(total)}
-        </span>
+        <span className="text-lg font-bold text-gray-900">${TOTAL}</span>
       </div>
 
       {/* Checkout */}

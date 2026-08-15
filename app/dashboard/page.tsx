@@ -16,12 +16,6 @@ export default function DashboardOverviewPage() {
     .filter(o => o.status !== "Cancelled")
     .reduce((sum, o) => sum + o.total, 0);
 
-  const currency = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(totalSpent);
-
   return (
     <div>
       <div className="mb-5 md:mb-6">
@@ -52,7 +46,7 @@ export default function DashboardOverviewPage() {
 
         <StatCard
           label="Total spent"
-          value={currency}
+          value={`$${totalSpent}`}
           icon={<FiDollarSign className="h-5 w-5" />}
         />
       </div>

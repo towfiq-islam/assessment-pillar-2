@@ -9,12 +9,6 @@ interface RecentOrdersProps {
   showViewAll?: boolean;
 }
 
-const currency = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
-
 export function RecentOrders({
   orders,
   title = "Recent Orders",
@@ -58,7 +52,7 @@ export function RecentOrders({
 
               <div className="text-right">
                 <p className="font-semibold text-gray-900">
-                  {currency.format(order.total)}
+                  ${order.total}
                 </p>
                 <p className="mt-0.5 text-sm text-gray-500">
                   {order.itemsCount} {order.itemsCount === 1 ? "item" : "items"}
@@ -80,7 +74,7 @@ export function RecentOrders({
             </span>
 
             <span className="hidden text-right font-semibold text-gray-900 sm:inline">
-              {currency.format(order.total)}
+              ${order.total}
             </span>
 
             <Link

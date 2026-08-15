@@ -9,13 +9,6 @@ interface ProductCardProps {
   onAddToCart?: (product: Product) => void;
 }
 
-const currency = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
-
-
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   const inStock = product.stock > 0;
   const [justAdded, setJustAdded] = useState(false);
@@ -62,7 +55,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
         <div className="mt-auto flex items-center justify-between">
           <span className="text-sm md:text-xl font-bold text-gray-900">
-            {currency.format(product.price)}
+            ${product.price}
           </span>
         </div>
 

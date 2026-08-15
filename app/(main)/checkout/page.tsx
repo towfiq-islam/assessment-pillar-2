@@ -1,9 +1,8 @@
 "use client";
 import Link from "next/link";
 import { FiArrowLeft } from "react-icons/fi";
-import { ShippingForm } from "../../../components/checkout/ShippingForm";
-import { cartItems } from "@/components/data/cart";
-import { CartOrderSummary } from "../../../components/cart/CartOrderSummary";
+import { ShippingForm } from "@/components/checkout/ShippingForm";
+import { CartOrderSummary } from "@/components/cart/CartOrderSummary";
 import SectionTitle from "@/components/common/SectionTitle";
 
 export default function CheckoutPage() {
@@ -38,7 +37,7 @@ export default function CheckoutPage() {
           </div>
 
           <div className="lg:col-span-1">
-            <CartOrderSummary items={cartItems} />
+            <CartOrderSummary />
           </div>
         </div>
       </div>

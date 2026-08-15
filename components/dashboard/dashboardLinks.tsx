@@ -1,11 +1,5 @@
 import type { ReactNode } from "react";
-import {
-  FiGrid,
-  FiHeart,
-  FiMapPin,
-  FiPackage,
-  FiSettings,
-} from "react-icons/fi";
+import { FiGrid, FiMapPin, FiPackage, FiSettings } from "react-icons/fi";
 
 export interface SidebarLink {
   label: string;

@@ -8,12 +8,6 @@ interface CartLineItemProps {
   index?: number;
 }
 
-const currency = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0,
-});
-
 export function CartLineItem({ item, index = 0 }: CartLineItemProps) {
   const { product, quantity } = item;
 
@@ -46,7 +40,7 @@ export function CartLineItem({ item, index = 0 }: CartLineItemProps) {
             </h3>
 
             <p className="mt-1 text-sm font-semibold text-gray-600">
-              {currency.format(product.price)}
+              ${product.price}
             </p>
           </div>
 
