@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-primary-orange: #FD853A;
+  --color-secondary-black: #171717;
+
+  /* Font Family */
+  --font-urbanist: var(--font-urbanist);
+}
+
+html {
+  @apply scroll-smooth;
+}
+
+body {
+  @apply font-urbanist;
+}
