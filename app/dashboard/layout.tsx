@@ -1,7 +1,11 @@
+import dynamic from "next/dynamic";
 import { auth } from "@/auth";
 import type { ReactNode } from "react";
 import { customer } from "@/components/data/customer";
-import DashboardClient from "@/components/dashboard/DashboardClient";
+
+const DashboardClient = dynamic(
+  () => import("@/components/dashboard/DashboardClient"),
+);
 
 export default async function DashboardLayout({
   children,

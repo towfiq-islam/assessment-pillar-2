@@ -1,16 +1,24 @@
 "use client";
-import SectionTitle from "@/components/common/SectionTitle";
-import { RecentOrders } from "@/components/dashboard/RecentOrders";
-import { StatCard } from "@/components/dashboard/StatCard";
-import { customer } from "@/components/data/customer";
+import dynamic from "next/dynamic";
 import { FiClock, FiDollarSign, FiPackage } from "react-icons/fi";
+import SectionTitle from "@/components/common/SectionTitle";
+import { StatCard } from "@/components/dashboard/StatCard";
+import { RecentOrdersSkeleton } from "@/components/dashboard/RecentOrdersSkeleton";
+import { customer } from "@/components/data/customer";
 import { useOrdersStore } from "@/store/ordersStore";
+
+const RecentOrders = dynamic(
+  () =>
+    import("@/components/dashboard/RecentOrders").then(m => m.RecentOrders),
+  {
+    ssr: false,
+    loading: () => <RecentOrdersSkeleton />,
+  },
+);
 
 export default function DashboardOverviewPage() {
   const orders = useOrdersStore(state => state.orders);
-
   const totalOrders = orders.length;
-
   const pendingOrders = orders.filter(
     o => o.status === "Processing" || o.status === "Shipped",
   ).length;

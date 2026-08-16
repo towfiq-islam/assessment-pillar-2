@@ -1,7 +1,16 @@
 "use client";
+import dynamic from "next/dynamic";
 import SectionTitle from "@/components/common/SectionTitle";
-import { RecentOrders } from "@/components/dashboard/RecentOrders";
+import { RecentOrdersSkeleton } from "@/components/dashboard/RecentOrdersSkeleton";
 import { useOrdersStore } from "@/store/ordersStore";
+
+const RecentOrders = dynamic(
+  () => import("@/components/dashboard/RecentOrders").then(m => m.RecentOrders),
+  {
+    ssr: false,
+    loading: () => <RecentOrdersSkeleton />,
+  },
+);
 
 export default function OrdersPage() {
   const orders = useOrdersStore(state => state.orders);
@@ -18,11 +27,7 @@ export default function OrdersPage() {
         </p>
       </div>
 
-      <RecentOrders
-        orders={orders}
-        title="All Orders"
-        showViewAll={false}
-      />
+      <RecentOrders orders={orders} title="All Orders" showViewAll={false} />
     </div>
   );
 }
