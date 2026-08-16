@@ -6,6 +6,7 @@ import {
   FiArrowLeft,
   FiEye,
   FiEyeOff,
+  FiLoader,
   FiLock,
   FiMail,
   FiUser,
@@ -27,6 +28,7 @@ export default function AuthPage() {
   const [mode, setMode] = useState<AuthMode>("login");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const isLogin = mode === "login";
 
   const {
@@ -70,9 +72,15 @@ export default function AuthPage() {
   };
 
   const handleGoogleLogin = async () => {
-    await signIn("google", {
-      callbackUrl: "/dashboard",
-    });
+    setIsGoogleLoading(true);
+
+    try {
+      await signIn("google", {
+        callbackUrl: "/dashboard",
+      });
+    } finally {
+      setIsGoogleLoading(false);
+    }
   };
 
   return (
@@ -293,10 +301,15 @@ export default function AuthPage() {
             <button
               type="button"
               onClick={handleGoogleLogin}
-              className="mt-3 flex w-full cursor-pointer items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white py-2.5 text-sm font-semibold text-gray-700 transition-[transform,border-color,background-color] duration-200 hover:border-gray-300 hover:bg-gray-50 active:scale-[0.98]"
+              disabled={isGoogleLoading}
+              className="mt-3 flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-gray-200 bg-white py-2.5 text-sm font-semibold text-gray-700 transition-[transform,border-color,background-color] duration-200 hover:border-gray-300 hover:bg-gray-50 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <FcGoogle className="h-5 w-5" />
-              Continue with Google
+              {isGoogleLoading ? (
+                <FiLoader className="h-5 w-5 animate-spin text-gray-500" />
+              ) : (
+                <FcGoogle className="h-5 w-5" />
+              )}
+              {isGoogleLoading ? "Signing in..." : "Continue with Google"}
             </button>
           </form>
         </div>
