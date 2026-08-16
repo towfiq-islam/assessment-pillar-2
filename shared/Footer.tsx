@@ -22,15 +22,15 @@ type SocialLink = {
 
 const quickLinks: FooterLink[] = [
   { label: "Home", path: "/" },
-  { label: "About", path: "/about" },
-  { label: "Resume", path: "/resume" },
-  { label: "Project", path: "/project" },
+  { label: "About", path: "" },
+  { label: "Resume", path: "" },
+  { label: "Project", path: "" },
 ];
 
 const serviceLinks: FooterLink[] = [
-  { label: "UI/UX Design", path: "/service#ui-ux" },
-  { label: "Web Design", path: "/service#web" },
-  { label: "Landing Page", path: "/service#landing" },
+  { label: "UI/UX Design", path: "" },
+  { label: "Web Design", path: "" },
+  { label: "Landing Page", path: "" },
 ];
 
 const socialLinks: SocialLink[] = [
@@ -63,13 +63,13 @@ export default function Footer() {
               Follow
             </h3>
             <ul className="flex flex-wrap gap-1.5 lg:gap-3 pb-3">
-              {socialLinks?.map(({ label, href, icon: Icon }) => (
-                <li key={label}>
+              {socialLinks?.map(({ href, icon: Icon }) => (
+                <li key={href}>
                   <Link
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex size-8 lg:size-10 items-center justify-center rounded-full bg-white/10 text-white/80 transition-[transform,background-color] duration-200 hover:scale-110 hover:-translate-y-0.5 hover:bg-primary-orange hover:text-white active:scale-90"
+                    className="flex size-8 lg:size-10 items-center justify-center rounded-full bg-white/10 text-white/80 transition duration-300 hover:scale-110 hover:-translate-y-0.5 hover:bg-primary-orange hover:text-white active:scale-90"
                   >
                     <Icon className="size-3.5 lg:size-4" />
                   </Link>
@@ -85,10 +85,10 @@ export default function Footer() {
         >
           <p>© {new Date().getFullYear()}. All rights reserved.</p>
           <div className="flex gap-6">
-            <Link href="/privacy" className="hover:text-white">
+            <Link href="" className="hover:text-white">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:text-white">
+            <Link href="" className="hover:text-white">
               Terms of Service
             </Link>
           </div>
@@ -108,19 +108,16 @@ function FooterColumn({
   delay?: number;
 }) {
   return (
-    <div
-      className="animate-fade-up"
-      style={{ animationDelay: `${delay}s` }}
-    >
+    <div className="animate-fade-up" style={{ animationDelay: `${delay}s` }}>
       <h3 className="mb-3 md:mb-4 text-sm font-semibold uppercase tracking-wide text-white/50">
         {title}
       </h3>
       <ul className="space-y-2 md:space-y-3">
         {links.map(link => (
-          <li key={link.path}>
+          <li key={link.label}>
             <Link
-              href={link.path}
-              className="text-sm text-white/70 transition-colors hover:text-white"
+              href={link.label}
+              className="text-sm hover:underline text-white/70 transition-colors hover:text-white"
             >
               {link.label}
             </Link>
