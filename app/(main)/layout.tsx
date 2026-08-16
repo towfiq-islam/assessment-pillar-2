@@ -8,9 +8,9 @@ const MainLayout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      {/* <Navbar user={session?.user} /> */}
+      <Navbar user={session?.user} />
       <main>{children}</main>
-      {/* <Footer /> */}
+      <Footer />
     </>
   );
 };
