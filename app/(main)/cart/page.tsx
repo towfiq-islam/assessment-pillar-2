@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import toast from "react-hot-toast";
 import { FiShoppingBag, FiTrash2 } from "react-icons/fi";
 import SectionTitle from "@/components/common/SectionTitle";
 import { CartLineItem } from "@/components/cart/CartLineItem";
@@ -14,7 +13,6 @@ export default function CartPage() {
 
   const handleClearCart = () => {
     clearCart();
-    toast.success("Cart cleared");
   };
 
   return (
@@ -30,7 +28,7 @@ export default function CartPage() {
               <button
                 type="button"
                 onClick={handleClearCart}
-                className="flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-50 cursor-pointer"
+                className="flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-semibold text-red-500 transition-colors hover:bg-red-50 cursor-pointer"
               >
                 <FiTrash2 className="h-3.5 w-3.5" />
                 Clear cart
@@ -47,13 +45,38 @@ export default function CartPage() {
         </div>
 
         {isEmpty ? (
-          <EmptyCart />
+          <div className="animate-fade-up flex flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white py-24 text-center shadow-sm">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-orange-50">
+              <FiShoppingBag className="h-8 w-8 text-orange-500" />
+            </div>
+
+            <div>
+              <p className="text-lg font-semibold text-gray-900">
+                Your cart is empty
+              </p>
+
+              <p className="mt-1 text-sm text-gray-500">
+                Looks like you haven&apos;t added anything yet.
+              </p>
+            </div>
+
+            <Link
+              href="/"
+              className="mt-2 rounded-full bg-orange-500 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-500/20"
+            >
+              Browse products
+            </Link>
+          </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 items-start">
             <div className="lg:col-span-2">
               <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
                 {items.map((item, index) => (
-                  <CartLineItem key={item.product.id} item={item} index={index} />
+                  <CartLineItem
+                    key={item.product.id}
+                    item={item}
+                    index={index}
+                  />
                 ))}
               </div>
             </div>
@@ -65,33 +88,6 @@ export default function CartPage() {
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-function EmptyCart() {
-  return (
-    <div className="animate-fade-up flex flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white py-24 text-center shadow-sm">
-      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-orange-50">
-        <FiShoppingBag className="h-8 w-8 text-orange-500" />
-      </div>
-
-      <div>
-        <p className="text-lg font-semibold text-gray-900">
-          Your cart is empty
-        </p>
-
-        <p className="mt-1 text-sm text-gray-500">
-          Looks like you haven&apos;t added anything yet.
-        </p>
-      </div>
-
-      <Link
-        href="/"
-        className="mt-2 rounded-full bg-orange-500 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-500/20"
-      >
-        Browse products
-      </Link>
     </div>
   );
 }

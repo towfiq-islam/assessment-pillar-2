@@ -41,7 +41,7 @@ export function CartOrderSummary({ variant = "cart" }: CartOrderSummaryProps) {
   };
 
   const isCheckoutVariant = variant === "checkout";
-  
+
   return (
     <aside className="animate-fade-up rounded-xl border border-gray-200 bg-white p-4 md:p-5 shadow-sm">
       {/* Header */}
@@ -65,9 +65,7 @@ export function CartOrderSummary({ variant = "cart" }: CartOrderSummaryProps) {
 
         <div className="flex items-center justify-between text-gray-500">
           <span>Estimated tax</span>
-          <span className="font-medium text-gray-900">
-            ${tax.toFixed(2)}
-          </span>
+          <span className="font-medium text-gray-900">${tax.toFixed(2)}</span>
         </div>
       </div>
 
@@ -101,8 +99,7 @@ export function CartOrderSummary({ variant = "cart" }: CartOrderSummaryProps) {
       <button
         type="button"
         onClick={isCheckoutVariant ? handlePlaceOrder : handleCheckout}
-        disabled={isEmpty}
-        className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-orange-500 py-2.5 font-semibold text-white transition-[transform,background-color,box-shadow] duration-200 hover:scale-[1.02] hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-500/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:hover:bg-orange-500 disabled:hover:shadow-none"
+        className="mt-4 md:mt-5 cursor-pointer flex w-full items-center justify-center gap-2 rounded-full bg-orange-500 py-2.5 font-semibold text-white hover:scale-95 duration-300 transition-transform hover:shadow-lg hover:shadow-orange-500/20"
       >
         {isCheckoutVariant ? (
           <FiCheckCircle className="h-4 w-4" />

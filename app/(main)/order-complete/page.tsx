@@ -25,19 +25,19 @@ function OrderConfirmContent() {
       <div className="mx-auto max-w-xl text-center">
         {order ? (
           <>
-            <div className="animate-fade-up mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
-              <FiCheckCircle className="h-10 w-10 text-green-600" />
+            <div className="animate-fade-up mx-auto flex size-18 items-center justify-center rounded-full bg-orange-50">
+              <FiCheckCircle className="size-9 text-primary-orange" />
             </div>
 
             <div
-              className="animate-fade-up mt-6"
+              className="animate-fade-up mt-4"
               style={{ animationDelay: "0.1s" }}
             >
-              <SectionTitle>
+              <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
                 Order <span className="text-orange-500">Confirmed</span>
-              </SectionTitle>
+              </h2>
 
-              <p className="mt-2 text-[15px] text-gray-500">
+              <p className="mt-2 text-[15px] text-gray-500 max-w-md mx-auto">
                 Thank you! Your order has been placed successfully. A
                 confirmation has been sent to your email.
               </p>
@@ -60,8 +60,7 @@ function OrderConfirmContent() {
               <div className="flex items-center justify-between border-b border-gray-100 py-3">
                 <span className="text-sm text-gray-500">Items</span>
                 <span className="font-medium text-gray-900">
-                  {order.itemsCount}{" "}
-                  {order.itemsCount === 1 ? "item" : "items"}
+                  {order.itemsCount} {order.itemsCount === 1 ? "item" : "items"}
                 </span>
               </div>
 

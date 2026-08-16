@@ -27,7 +27,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   }
 
   return (
-    <div className="group relative flex h-full flex-col overflow-hidden rounded-xl md:rounded-2xl border border-gray-200 bg-white shadow-sm duration-300 transition-all hover:-translate-y-1.5 hover:shadow-lg hover:shadow-gray-200/60 active:scale-[0.985]">
+    <div className="group relative flex h-full flex-col overflow-hidden rounded-xl md:rounded-2xl border border-gray-200 bg-white shadow-sm duration-400 transition-all hover:-translate-y-1.5 hover:shadow-lg hover:shadow-gray-200/60 active:scale-[0.985]">
       <div className="relative h-[110px] md:h-[190px] xl:h-[220px] xl:w-full overflow-hidden">
         <Image
           src={product.image}
@@ -37,14 +37,14 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         />
 
         {isOutOfStock && (
-          <span className="absolute left-1.5 md:left-3 top-1.5 md:top-3 inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2 md:px-3 py-0.5 md:py-1 text-[10px] md:text-xs font-medium text-red-600 shadow-sm">
+          <span className="absolute left-1.5 md:left-3 top-1.5 md:top-3 inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2 md:px-3 py-0.5 md:py-1 text-[10px] md:text-xs font-semibold text-red-600 shadow-sm">
             <span className="size-1.5 md:size-2 rounded-full bg-red-500" />
             Out of stock
           </span>
         )}
 
         {isLowStock && (
-          <span className="absolute left-1.5 md:left-3 top-1.5 md:top-3 inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2 md:px-3 py-0.5 md:py-1 text-[10px] md:text-xs font-medium text-amber-600 shadow-sm">
+          <span className="absolute left-1.5 md:left-3 top-1.5 md:top-3 inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2 md:px-3 py-0.5 md:py-1 text-[10px] md:text-xs font-semibold text-amber-600 shadow-sm">
             <span className="size-1.5 md:size-2 rounded-full bg-amber-400" />
             Low Stock
           </span>
@@ -75,12 +75,12 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
               ? `${product.name} is out of stock`
               : `Add ${product.name} to cart`
           }
-          className={`mt-1 flex w-full items-center justify-center gap-2 rounded-full py-2 md:py-3 text-xs md:text-sm font-semibold transition-colors duration-200 disabled:cursor-not-allowed ${
+          className={`mt-1 flex w-full items-center justify-center gap-2 rounded-full py-2 md:py-3 text-xs hover:scale-95 duration-300 md:text-sm font-semibold transition-colors disabled:cursor-not-allowed ${
             justAdded
-              ? "bg-green-500 text-white"
+              ? "bg-orange-600 text-white cursor-pointer"
               : isOutOfStock
                 ? "bg-gray-100 text-gray-400"
-                : "bg-orange-500 text-white hover:bg-orange-600 hover:shadow-md hover:shadow-orange-500/20 cursor-pointer"
+                : "bg-orange-500 text-white hover:shadow-md hover:shadow-orange-500/20 cursor-pointer"
           }`}
         >
           <span

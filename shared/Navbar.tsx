@@ -4,13 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import {
-  FiGrid,
-  FiLogOut,
-  FiMenu,
-  FiUser,
-  FiX,
-} from "react-icons/fi";
+import { FiGrid, FiLogOut, FiMenu, FiUser, FiX } from "react-icons/fi";
 import logo from "@/assets/logo.png";
 import { NavLinks, type NavLink } from "@/components/data/navLinks";
 import { DashboardDrawer } from "@/shared/DashboardDrawer";
@@ -93,7 +87,6 @@ export function ProfileAvatar({
   );
 }
 
-
 interface NavbarProps {
   customer?: CustomerProfile;
   user?: NavbarUser;
@@ -112,7 +105,6 @@ export default function Navbar({ customer, user }: NavbarProps) {
 
   useEffect(() => {
     if (!isDrawerOpen) return;
-
     const original = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -124,11 +116,11 @@ export default function Navbar({ customer, user }: NavbarProps) {
   return (
     <nav className="sticky top-3 xl:top-3.5 z-50">
       {/*  Desktop */}
-      <div className="nav-fade hidden lg:max-w-[94%] xl:max-w-7xl lg:mx-auto lg:p-2.5 lg:flex items-center justify-between rounded-full bg-secondary-black text-white gap-5 xl:gap-20">
+      <div className="nav-fade hidden lg:max-w-[94%] xl:max-w-7xl lg:mx-auto lg:px-3 lg:py-2.5 lg:flex items-center justify-between rounded-full bg-secondary-black text-white gap-5 xl:gap-20">
         <ul className="w-full flex justify-between items-center flex-1">
           {NavLinks?.slice(0, 3)?.map(link => (
             <NavItem
-              key={link.path}
+              key={link.label}
               link={link}
               isActive={pathname === link.path}
             />
@@ -142,7 +134,7 @@ export default function Navbar({ customer, user }: NavbarProps) {
         <ul className="w-full flex justify-between items-center flex-1">
           {NavLinks?.slice(3)?.map(link => (
             <NavItem
-              key={link.path}
+              key={link.label}
               link={link}
               isActive={pathname === link.path}
             />
@@ -177,30 +169,35 @@ export default function Navbar({ customer, user }: NavbarProps) {
             />
           </Link>
 
-          <button
-            type="button"
-            aria-expanded={isMenuOpen || isDrawerOpen}
-            aria-label={isMenuOpen || isDrawerOpen ? "Close menu" : "Open menu"}
-            onClick={() => {
-              if (isDashboard) {
-                setIsDrawerOpen(prev => !prev);
-              } else {
-                setIsMenuOpen(prev => !prev);
+          <div className="flex gap-0.5 items-center">
+            <CartButton />
+            <button
+              type="button"
+              aria-expanded={isMenuOpen || isDrawerOpen}
+              aria-label={
+                isMenuOpen || isDrawerOpen ? "Close menu" : "Open menu"
               }
-            }}
-            className="relative flex size-9 items-center justify-center rounded-full text-white/80 transition-colors duration-200 hover:bg-[#333] hover:text-white cursor-pointer"
-          >
-            <span
-              key={isMenuOpen || isDrawerOpen ? "close" : "menu"}
-              className="animate-icon-swap flex items-center justify-center"
+              onClick={() => {
+                if (isDashboard) {
+                  setIsDrawerOpen(prev => !prev);
+                } else {
+                  setIsMenuOpen(prev => !prev);
+                }
+              }}
+              className="relative flex size-9 items-center justify-center rounded-full text-white/80 transition-colors duration-200 hover:bg-[#333] hover:text-white cursor-pointer"
             >
-              {isMenuOpen || isDrawerOpen ? (
-                <FiX size={24} />
-              ) : (
-                <FiMenu size={24} />
-              )}
-            </span>
-          </button>
+              <span
+                key={isMenuOpen || isDrawerOpen ? "close" : "menu"}
+                className="animate-icon-swap flex items-center justify-center"
+              >
+                {isMenuOpen || isDrawerOpen ? (
+                  <FiX size={24} />
+                ) : (
+                  <FiMenu size={24} />
+                )}
+              </span>
+            </button>
+          </div>
         </div>
 
         {!isDashboard && (
@@ -243,15 +240,13 @@ export default function Navbar({ customer, user }: NavbarProps) {
                             {user.email}
                           </p>
                         </div>
-
-                        <CartButton onNavigate={closeMenus} />
                       </div>
 
-                      <div className="mt-2 flex items-center gap-3">
+                      <div className="mt-3 flex items-center gap-3">
                         <Link
                           href="/dashboard"
                           onClick={closeMenus}
-                          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary-orange px-4 py-2.5 text-sm font-semibold text-black transition-transform duration-200 active:scale-[0.98]"
+                          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary-orange px-4 py-2 text-sm font-semibold text-black transition-transform duration-200 active:scale-[0.98]"
                         >
                           <FiGrid size={16} />
                           Dashboard
@@ -260,7 +255,7 @@ export default function Navbar({ customer, user }: NavbarProps) {
                         <button
                           type="button"
                           onClick={() => signOut({ callbackUrl: "/" })}
-                          className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/10 px-4 py-2.5 text-sm font-medium text-white/80 transition-all duration-300 hover:border-white/20 hover:text-white"
+                          className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-white/80 transition-all duration-300 hover:border-white/20 hover:text-white"
                         >
                           <FiLogOut size={16} />
                           Log out
@@ -282,8 +277,6 @@ export default function Navbar({ customer, user }: NavbarProps) {
                         <FiUser size={17} />
                         <span>Login</span>
                       </Link>
-
-                      <CartButton onNavigate={closeMenus} />
                     </div>
                   )}
                 </div>
