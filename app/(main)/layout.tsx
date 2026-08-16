@@ -1,11 +1,14 @@
 import React from "react";
+import { auth } from "@/auth";
 import Footer from "@/shared/Footer";
-import ServerNavbar from "@/shared/ServerNavbar";
+import Navbar from "@/shared/Navbar";
 
-const MainLayout = ({ children }: { children: React.ReactNode }) => {
+const MainLayout = async ({ children }: { children: React.ReactNode }) => {
+  const session = await auth();
+
   return (
     <>
-      <ServerNavbar />
+      <Navbar user={session?.user} />
       <main>{children}</main>
       <Footer />
     </>

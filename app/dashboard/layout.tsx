@@ -1,7 +1,7 @@
-import type { ReactNode } from "react";
 import { auth } from "@/auth";
+import type { ReactNode } from "react";
 import { customer } from "@/components/data/customer";
-import DashboardShell from "@/components/dashboard/DashboardShell";
+import DashboardClient from "@/components/dashboard/DashboardClient";
 
 export default async function DashboardLayout({
   children,
@@ -11,8 +11,8 @@ export default async function DashboardLayout({
   const session = await auth();
 
   return (
-    <DashboardShell customer={customer} user={session?.user}>
+    <DashboardClient customer={customer} user={session?.user}>
       {children}
-    </DashboardShell>
+    </DashboardClient>
   );
 }

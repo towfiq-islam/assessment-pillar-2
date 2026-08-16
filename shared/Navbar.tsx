@@ -1,12 +1,10 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import logo from "@/assets/logo.png";
 import {
-  FiChevronDown,
   FiGrid,
   FiLogOut,
   FiMenu,
@@ -14,22 +12,17 @@ import {
   FiUser,
   FiX,
 } from "react-icons/fi";
-import { sidebarLinks } from "@/components/dashboard/dashboardLinks";
+import logo from "@/assets/logo.png";
+import { NavLinks, type NavLink } from "@/components/data/navLinks";
+import { DashboardDrawer } from "@/shared/DashboardDrawer";
+import { ProfileDropdown } from "@/components/common/ProfileDropdown";
 import type { CustomerProfile } from "@/types/customer";
 
-type NavLink = {
-  label: string;
-  path: string;
+export type NavbarUser = {
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
 };
-
-const NavLinks = [
-  { label: "Home", path: "/" },
-  { label: "About", path: "" },
-  { label: "Service", path: "" },
-  { label: "Resume", path: "" },
-  { label: "Project", path: "" },
-  { label: "Contact", path: "" },
-];
 
 function NavItem({ link, isActive }: { link: NavLink; isActive: boolean }) {
   return (
@@ -69,7 +62,7 @@ function MobileNavItem({
   );
 }
 
-function ProfileAvatar({
+export function ProfileAvatar({
   image,
   name,
   size = 28,
@@ -100,12 +93,6 @@ function ProfileAvatar({
   );
 }
 
-export type NavbarUser = {
-  name?: string | null;
-  email?: string | null;
-  image?: string | null;
-};
-
 interface NavbarProps {
   customer?: CustomerProfile;
   user?: NavbarUser;
@@ -114,28 +101,12 @@ interface NavbarProps {
 export default function Navbar({ customer, user }: NavbarProps) {
   const pathname = usePathname();
   const isDashboard = pathname.startsWith("/dashboard");
-  const isAuthenticated = !!user;
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [prevPathname, setPrevPathname] = useState(pathname);
-  const navRef = useRef<HTMLElement>(null);
-  const profileRef = useRef<HTMLDivElement>(null);
-
-  if (prevPathname !== pathname) {
-    setPrevPathname(pathname);
-    setIsProfileOpen(false);
-  }
 
   const closeMenus = () => {
     setIsMenuOpen(false);
     setIsDrawerOpen(false);
-    setIsProfileOpen(false);
-  };
-
-  const handleLogout = () => {
-    signOut({ callbackUrl: "/" });
   };
 
   useEffect(() => {
@@ -150,7 +121,7 @@ export default function Navbar({ customer, user }: NavbarProps) {
   }, [isDrawerOpen]);
 
   return (
-    <nav ref={navRef} className="sticky top-3 xl:top-3.5 z-50">
+    <nav className="sticky top-3 xl:top-3.5 z-50">
       {/*  Desktop */}
       <div className="nav-fade hidden lg:max-w-[94%] xl:max-w-7xl lg:mx-auto lg:p-2.5 lg:flex items-center justify-between rounded-full bg-secondary-black text-white gap-5 xl:gap-20">
         <ul className="w-full flex justify-between items-center flex-1">
@@ -178,64 +149,8 @@ export default function Navbar({ customer, user }: NavbarProps) {
         </ul>
 
         <div className="ml-3 xl:ml-5 flex shrink-0 items-center gap-2">
-          {isAuthenticated ? (
-            <div className="relative" ref={profileRef}>
-              <button
-                type="button"
-                onClick={() => setIsProfileOpen(prev => !prev)}
-                aria-expanded={isProfileOpen}
-                aria-haspopup="menu"
-                className="flex cursor-pointer items-center gap-1.5 rounded-full border border-white/10 py-1.5 pl-1.5 pr-2 text-white/80 transition-all duration-300 hover:border-white/20 hover:text-white"
-              >
-                <ProfileAvatar image={user?.image} name={user?.name} size={30} />
-                <FiChevronDown
-                  size={14}
-                  className={`transition-transform duration-200 ${
-                    isProfileOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {isProfileOpen && (
-                <div className="animate-menu-in absolute right-0 top-full z-50 mt-3 w-64 rounded-2xl bg-white p-2 text-gray-900 shadow-2xl shadow-black/40">
-                  <div className="flex items-center gap-3 border-b border-gray-100 px-3 pb-3 pt-2">
-                    <ProfileAvatar
-                      image={user?.image}
-                      name={user?.name}
-                      size={40}
-                    />
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-gray-900">
-                        {user?.name ?? "My account"}
-                      </p>
-                      <p className="truncate text-xs text-gray-500">
-                        {user?.email}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1 pt-2">
-                    <Link
-                      href="/dashboard"
-                      onClick={() => setIsProfileOpen(false)}
-                      className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100 hover:text-gray-900"
-                    >
-                      <FiGrid className="h-4 w-4" />
-                      Dashboard
-                    </Link>
-
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="flex cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-red-500 transition-colors duration-200 hover:bg-red-50"
-                    >
-                      <FiLogOut className="h-4 w-4" />
-                      Log out
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+          {user ? (
+            <ProfileDropdown user={user} />
           ) : (
             <Link
               href="/login"
@@ -312,7 +227,7 @@ export default function Navbar({ customer, user }: NavbarProps) {
                     </div>
                   ))}
 
-                  {isAuthenticated ? (
+                  {user ? (
                     <div
                       className="animate-fade-up mt-2 border-t border-white/10 px-4 pt-3"
                       style={{
@@ -321,16 +236,16 @@ export default function Navbar({ customer, user }: NavbarProps) {
                     >
                       <div className="flex items-center gap-3">
                         <ProfileAvatar
-                          image={user?.image}
-                          name={user?.name}
+                          image={user.image}
+                          name={user.name}
                           size={40}
                         />
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-semibold text-white">
-                            {user?.name ?? "My account"}
+                            {user.name ?? "My account"}
                           </p>
                           <p className="truncate text-xs text-white/60">
-                            {user?.email}
+                            {user.email}
                           </p>
                         </div>
 
@@ -356,7 +271,7 @@ export default function Navbar({ customer, user }: NavbarProps) {
 
                         <button
                           type="button"
-                          onClick={handleLogout}
+                          onClick={() => signOut({ callbackUrl: "/" })}
                           className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/10 px-4 py-2.5 text-sm font-medium text-white/80 transition-all duration-300 hover:border-white/20 hover:text-white"
                         >
                           <FiLogOut size={16} />
@@ -396,85 +311,13 @@ export default function Navbar({ customer, user }: NavbarProps) {
           </div>
         )}
 
-        {isDashboard && isDrawerOpen && (
-          <div
-            className="fixed inset-0 z-50"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Dashboard menu"
-          >
-            {/* Backdrop */}
-            <div
-              className="animate-backdrop-in absolute inset-0 bg-black/40 backdrop-blur-xs"
-              onClick={closeMenus}
-            />
-
-            <div className="animate-drawer-in absolute inset-y-0 left-0 flex w-64 md:w-68 max-w-[85vw] flex-col bg-white shadow-2xl">
-              <div className="flex items-center gap-3 border-b border-gray-200 p-5">
-                <ProfileAvatar
-                  image={user?.image}
-                  name={user?.name ?? customer?.name}
-                  size={40}
-                />
-
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-gray-900">
-                    {user?.name ?? customer?.name ?? "My account"}
-                  </p>
-                  <p className="truncate text-xs text-gray-500">
-                    {user?.email ?? customer?.email}
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={closeMenus}
-                  aria-label="Close menu"
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
-                >
-                  <FiX className="h-5 w-5" />
-                </button>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-5">
-                <nav>
-                  <ul className="flex flex-col gap-1.5">
-                    {sidebarLinks?.map(link => {
-                      const isActive = pathname === link.path;
-
-                      return (
-                        <li key={link.path}>
-                          <Link
-                            href={link.path}
-                            onClick={closeMenus}
-                            aria-current={isActive ? "page" : undefined}
-                            className={`flex items-center gap-3 rounded-full px-4 py-3 text-sm font-medium transition-colors duration-200 ${
-                              isActive
-                                ? "bg-primary-orange text-black"
-                                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                            }`}
-                          >
-                            {link.icon}
-                            {link.label}
-                          </Link>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </nav>
-
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="mt-3 flex items-center gap-3 rounded-full px-4 py-3 text-[15px] font-semibold cursor-pointer transition-colors duration-200 text-red-500"
-                >
-                  <FiLogOut className="h-4 w-4" />
-                  Log out
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <DashboardDrawer
+          isOpen={isDrawerOpen && isDashboard}
+          pathname={pathname}
+          user={user}
+          customer={customer}
+          onClose={closeMenus}
+        />
       </div>
     </nav>
   );

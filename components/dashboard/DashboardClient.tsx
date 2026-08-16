@@ -4,17 +4,17 @@ import type { CustomerProfile } from "@/types/customer";
 import Navbar, { type NavbarUser } from "@/shared/Navbar";
 import { DashboardSidebar } from "./DashboardSidebar";
 
-interface DashboardShellProps {
+interface DashboardProps {
   customer: CustomerProfile;
   user?: NavbarUser;
   children: ReactNode;
 }
 
-export default function DashboardShell({
+export default function DashboardClient({
   customer,
   user,
   children,
-}: DashboardShellProps) {
+}: DashboardProps) {
   return (
     <div className="min-h-screen">
       <Navbar customer={customer} user={user} />
