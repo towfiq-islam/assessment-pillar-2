@@ -82,15 +82,17 @@ implementation and production-ready frontend architecture.
 
 ---
 
-## 7. Lighthouse Report:
+---
 
-The production build was tested using Google Lighthouse.
+## 7. Bonus Features Completed
 
-![Lighthouse Report](./docs/lighthouse-report.png)
+- Edge-level route protection
+- Performance / Code Splitting
+- Cart Persistence
 
 ---
 
-## 6. Tech Decisions
+## 8. Tech Decisions
 
 ### Why Zustand?
 
@@ -110,7 +112,15 @@ keeping the application architecture simple and maintainable.
 
 ---
 
-## 7. Installation:
+## 9. Lighthouse Report:
+
+The production build was tested using Google Lighthouse.
+
+![Lighthouse Report](./docs/lighthouse-report.png)
+
+---
+
+## 10. Installation:
 
 ```bash
 # Clone the repository
@@ -134,7 +144,7 @@ npm run dev
 
 ---
 
-## 8. Usage:
+## 11. Usage:
 
 Run `npm run dev` to start the project locally. The app will run on
 **http://localhost:3000**
