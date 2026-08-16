@@ -3,6 +3,7 @@ import ReduxProvider from "@/provider/ReduxProvider/ReduxProvider";
 import type { Metadata } from "next";
 import { Urbanist } from "next/font/google";
 import ToastProvider from "@/provider/ToastProvider/ToastProvider";
+import AuthProvider from "@/provider/AuthProvider/AuthProvider";
 
 const urbanist = Urbanist({
   variable: "--font-urbanist",
@@ -27,10 +28,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${urbanist.variable} antialiased`}>
       <body>
-        <ReduxProvider>
-          <ToastProvider />
-          {children}
-        </ReduxProvider>
+        <AuthProvider>
+          <ReduxProvider>
+            <ToastProvider />
+            {children}
+          </ReduxProvider>
+        </AuthProvider>
       </body>
     </html>
   );
