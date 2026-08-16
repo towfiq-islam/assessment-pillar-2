@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -21,11 +21,26 @@ export function ProfileDropdown({ user }: { user: NavbarUser }) {
     signOut({ callbackUrl: "/" });
   };
 
+  useEffect(() => {
+    const handleWindowClick = () => {
+      setIsOpen(false);
+    };
+
+    window.addEventListener("click", handleWindowClick);
+
+    return () => {
+      window.removeEventListener("click", handleWindowClick);
+    };
+  }, []);
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button
         type="button"
-        onClick={() => setIsOpen(prev => !prev)}
+        onClick={e => {
+          e.stopPropagation();
+          setIsOpen(prev => !prev);
+        }}
         aria-expanded={isOpen}
         aria-haspopup="menu"
         className="flex cursor-pointer items-center gap-1.5 rounded-full border border-white/10 py-1.5 pl-1.5 pr-2 text-white/80 transition-all duration-300 hover:border-white/20 hover:text-white"
@@ -40,7 +55,10 @@ export function ProfileDropdown({ user }: { user: NavbarUser }) {
       </button>
 
       {isOpen && (
-        <div className="animate-menu-in absolute right-0 top-full z-50 mt-3 w-64 rounded-2xl bg-white p-2 text-gray-900 shadow-2xl shadow-black/40">
+        <div
+          onClick={e => e.stopPropagation()}
+          className="animate-menu-in absolute right-0 top-full z-50 mt-3 w-62 rounded-2xl bg-white p-2 text-gray-900 shadow-2xl shadow-black/40"
+        >
           <div className="flex items-center gap-3 border-b border-gray-100 px-3 pb-3 pt-2">
             <ProfileAvatar image={user.image} name={user.name} size={40} />
             <div className="min-w-0">
