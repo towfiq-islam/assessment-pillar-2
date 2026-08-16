@@ -1,4 +1,4 @@
-# Project Name: JCREA — React Frontend Assessment
+# JCREA — React Frontend Assessment
 
 ## 1. Description:
 
@@ -11,12 +11,12 @@ implementation and production-ready frontend architecture.
 
 ## 2. Tech Stack:
 
-- Next.js (v16) – App Router
-- TypeScript – for type-safe, maintainable code
-- Tailwind CSS (v4) – for modern responsive styling
-- NextAuth.js (v5) – for authentication
-- Zustand - for state management
-- Vercel - for deployment
+- Next.js v16 – App Router
+- TypeScript – Type-safe, maintainable code
+- Tailwind CSS v4 – Modern responsive styling
+- NextAuth.js v5 – Google OAuth authentication
+- Zustand - Global state management and cart persistence
+- Vercel - Deployment
 
 ---
 
@@ -26,7 +26,7 @@ implementation and production-ready frontend architecture.
 - Pixel-accurate, responsive Figma implementation
 - Google OAuth authentication with NextAuth.js
 - **Fast, Lightweight & SEO-Optimized** – Built for high GTmetrix and Lighthouse
-  scores.
+  scores (100%).
 - Protected dashboard routes with middleware (Proxy.ts)
 - Internal mock Product API with TypeScript data types
 - Inventory status handling: Out of Stock, Low Stock, and Normal Stock
@@ -41,7 +41,13 @@ implementation and production-ready frontend architecture.
 
 ---
 
-## 4. Dependencies:
+## 4. Live Demo
+
+**Live Demo:** https://jcrea-assesment.vercel.app
+
+---
+
+## 5. Dependencies:
 
 ```json
 "dependencies": {
@@ -59,7 +65,7 @@ implementation and production-ready frontend architecture.
 
 ---
 
-## 5. devDependencies:
+## 6. devDependencies:
 
 ```json
 "devDependencies": {
@@ -76,7 +82,35 @@ implementation and production-ready frontend architecture.
 
 ---
 
-## 6. Installation:
+## 7. Lighthouse Report:
+
+The production build was tested using Google Lighthouse.
+
+![Lighthouse Report](./docs/lighthouse-report.png)
+
+---
+
+## 6. Tech Decisions
+
+### Why Zustand?
+
+Zustand was selected for global state management because the application
+primarily requires a lightweight global cart store.
+
+Compared with Redux, Zustand requires less boilerplate while still providing:
+
+- Global state access
+- Simple actions
+- Easy state updates
+- Persistence middleware
+- Minimal setup
+
+For this assessment, Zustand provides the required functionality while
+keeping the application architecture simple and maintainable.
+
+---
+
+## 7. Installation:
 
 ```bash
 # Clone the repository
@@ -85,7 +119,7 @@ git clone https://github.com/towfiq-islam/assessment-pillar-2.git
 # Navigate into the project
 cd assessment-pillar-2
 
-# Create a .env.local file in root and put the environment variable there.
+# Create a `.env.local` file in root and put the environment variable there.
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=nextAuth-secret
 GOOGLE_CLIENT_ID=google-client-id
@@ -100,7 +134,7 @@ npm run dev
 
 ---
 
-## 7. Usage:
+## 8. Usage:
 
 Run `npm run dev` to start the project locally. The app will run on
 **http://localhost:3000**
