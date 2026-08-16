@@ -1,7 +1,8 @@
 "use client";
-import { CartItem } from "@/types/cart";
 import Image from "next/image";
 import { FiMinus, FiPlus, FiTrash2 } from "react-icons/fi";
+import type { CartItem } from "@/types/cart";
+import { useCartStore } from "@/store/cartStore";
 
 interface CartLineItemProps {
   item: CartItem;
@@ -10,6 +11,10 @@ interface CartLineItemProps {
 
 export function CartLineItem({ item, index = 0 }: CartLineItemProps) {
   const { product, quantity } = item;
+  const updateQty = useCartStore(state => state.updateQty);
+  const removeFromCart = useCartStore(state => state.removeFromCart);
+  const maxQty = product.stock;
+  const atMaxQty = quantity >= maxQty;
 
   return (
     <div
@@ -46,6 +51,7 @@ export function CartLineItem({ item, index = 0 }: CartLineItemProps) {
 
           <button
             type="button"
+            onClick={() => removeFromCart(product.id)}
             aria-label={`Remove ${product.name} from cart`}
             className="shrink-0 rounded-full p-2 text-gray-400 transition-[transform,background-color,color] duration-200 hover:bg-orange-50 hover:text-orange-500 active:scale-90 cursor-pointer"
           >
@@ -57,7 +63,8 @@ export function CartLineItem({ item, index = 0 }: CartLineItemProps) {
           <div className="flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-2 py-1">
             <button
               type="button"
-              aria-label="Decrease quantity"
+              onClick={() => updateQty(product.id, quantity - 1)}
+              aria-label={`Decrease quantity of ${product.name}`}
               className="flex h-6 w-6 items-center justify-center rounded-full text-gray-500 transition-[transform,background-color,color] duration-200 hover:bg-gray-200 hover:text-gray-900 active:scale-75 cursor-pointer"
             >
               <FiMinus className="h-3 w-3" />
@@ -69,8 +76,10 @@ export function CartLineItem({ item, index = 0 }: CartLineItemProps) {
 
             <button
               type="button"
-              aria-label="Increase quantity"
-              className="flex h-6 w-6 items-center justify-center rounded-full text-gray-500 transition-[transform,background-color,color] duration-200 hover:bg-gray-200 hover:text-gray-900 active:scale-75 cursor-pointer"
+              onClick={() => updateQty(product.id, quantity + 1)}
+              disabled={atMaxQty}
+              aria-label={`Increase quantity of ${product.name}`}
+              className="flex h-6 w-6 items-center justify-center rounded-full text-gray-500 transition-[transform,background-color,color] duration-200 hover:bg-gray-200 hover:text-gray-900 active:scale-75 cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
             >
               <FiPlus className="h-3 w-3" />
             </button>

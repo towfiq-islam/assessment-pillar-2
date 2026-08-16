@@ -1,26 +1,28 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
+import {
+  FiGrid,
+  FiLogOut,
+  FiMenu,
+  FiUser,
+  FiX,
+} from "react-icons/fi";
 import logo from "@/assets/logo.png";
-import { FiShoppingBag, FiUser, FiMenu, FiX, FiLogOut } from "react-icons/fi";
-import { sidebarLinks } from "@/components/dashboard/dashboardLinks";
+import { NavLinks, type NavLink } from "@/components/data/navLinks";
+import { DashboardDrawer } from "@/shared/DashboardDrawer";
+import { ProfileDropdown } from "@/components/common/ProfileDropdown";
 import type { CustomerProfile } from "@/types/customer";
+import { CartButton } from "@/components/common/CartButton";
 
-type NavLink = {
-  label: string;
-  path: string;
+export type NavbarUser = {
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
 };
-
-const NavLinks = [
-  { label: "Home", path: "/" },
-  { label: "About", path: "" },
-  { label: "Service", path: "" },
-  { label: "Resume", path: "" },
-  { label: "Project", path: "" },
-  { label: "Contact", path: "" },
-];
 
 function NavItem({ link, isActive }: { link: NavLink; isActive: boolean }) {
   return (
@@ -60,16 +62,48 @@ function MobileNavItem({
   );
 }
 
-interface NavbarProps {
-  customer?: CustomerProfile;
+export function ProfileAvatar({
+  image,
+  name,
+  size = 28,
+}: {
+  image?: string | null;
+  name?: string | null;
+  size?: number;
+}) {
+  if (image) {
+    return (
+      <Image
+        src={image}
+        alt={name ?? "User avatar"}
+        width={size}
+        height={size}
+        className="shrink-0 rounded-full object-cover"
+      />
+    );
+  }
+
+  return (
+    <span
+      className="flex shrink-0 items-center justify-center rounded-full bg-primary-orange text-white"
+      style={{ width: size, height: size }}
+    >
+      <FiUser size={Math.round(size * 0.55)} />
+    </span>
+  );
 }
 
-export default function Navbar({ customer }: NavbarProps) {
+
+interface NavbarProps {
+  customer?: CustomerProfile;
+  user?: NavbarUser;
+}
+
+export default function Navbar({ customer, user }: NavbarProps) {
   const pathname = usePathname();
   const isDashboard = pathname.startsWith("/dashboard");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const navRef = useRef<HTMLElement>(null);
 
   const closeMenus = () => {
     setIsMenuOpen(false);
@@ -88,7 +122,7 @@ export default function Navbar({ customer }: NavbarProps) {
   }, [isDrawerOpen]);
 
   return (
-    <nav ref={navRef} className="sticky top-3 xl:top-3.5 z-50">
+    <nav className="sticky top-3 xl:top-3.5 z-50">
       {/*  Desktop */}
       <div className="nav-fade hidden lg:max-w-[94%] xl:max-w-7xl lg:mx-auto lg:p-2.5 lg:flex items-center justify-between rounded-full bg-secondary-black text-white gap-5 xl:gap-20">
         <ul className="w-full flex justify-between items-center flex-1">
@@ -116,21 +150,19 @@ export default function Navbar({ customer }: NavbarProps) {
         </ul>
 
         <div className="ml-3 xl:ml-5 flex shrink-0 items-center gap-2">
-          <Link
-            href="/login"
-            className="flex items-center gap-2 rounded-full border border-white/10 px-3 xl:px-4 py-2.5 text-sm font-medium text-white/80 transition-all duration-300 hover:border-white/20 hover:text-white"
-          >
-            <FiUser size={17} />
-            <span>Login</span>
-          </Link>
+          {user ? (
+            <ProfileDropdown user={user} />
+          ) : (
+            <Link
+              href="/login"
+              className="flex items-center gap-2 rounded-full border border-white/10 px-3 xl:px-4 py-2.5 text-sm font-medium text-white/80 transition-all duration-300 hover:border-white/20 hover:text-white"
+            >
+              <FiUser size={17} />
+              <span>Login</span>
+            </Link>
+          )}
 
-          <Link
-            href="/cart"
-            aria-label="Shopping cart"
-            className="relative flex size-9.5 xl:size-10 items-center justify-center rounded-full bg-primary-orange text-white shadow-[0_4px_20px_rgba(255,107,53,0.25)] transition-[transform,box-shadow] duration-300 hover:scale-105 hover:shadow-[0_6px_25px_rgba(255,107,53,0.4)] active:scale-95"
-          >
-            <FiShoppingBag size={18} />
-          </Link>
+          <CartButton />
         </div>
       </div>
 
@@ -190,108 +222,83 @@ export default function Navbar({ customer }: NavbarProps) {
                     </div>
                   ))}
 
-                  <div
-                    className="animate-fade-up mt-2 flex items-center justify-center gap-3 border-t border-white/10 px-4 pt-3"
-                    style={{
-                      animationDelay: `${0.05 + NavLinks.length * 0.05}s`,
-                    }}
-                  >
-                    <Link
-                      href="/login"
-                      onClick={closeMenus}
-                      className="flex flex-1 items-center justify-center gap-2 rounded-full border border-white/10 px-4 py-2.5 text-sm font-medium text-white/80 transition-all duration-300 hover:border-white/20 hover:text-white"
+                  {user ? (
+                    <div
+                      className="animate-fade-up mt-2 border-t border-white/10 px-4 pt-3"
+                      style={{
+                        animationDelay: `${0.05 + NavLinks.length * 0.05}s`,
+                      }}
                     >
-                      <FiUser size={17} />
-                      <span>Login</span>
-                    </Link>
+                      <div className="flex items-center gap-3">
+                        <ProfileAvatar
+                          image={user.image}
+                          name={user.name}
+                          size={40}
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-semibold text-white">
+                            {user.name ?? "My account"}
+                          </p>
+                          <p className="truncate text-xs text-white/60">
+                            {user.email}
+                          </p>
+                        </div>
 
-                    <Link
-                      href="/cart"
-                      onClick={closeMenus}
-                      aria-label="Shopping cart"
-                      className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-orange text-white shadow-[0_4px_20px_rgba(255,107,53,0.25)] transition-transform duration-200 active:scale-90"
+                        <CartButton onNavigate={closeMenus} />
+                      </div>
+
+                      <div className="mt-2 flex items-center gap-3">
+                        <Link
+                          href="/dashboard"
+                          onClick={closeMenus}
+                          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary-orange px-4 py-2.5 text-sm font-semibold text-black transition-transform duration-200 active:scale-[0.98]"
+                        >
+                          <FiGrid size={16} />
+                          Dashboard
+                        </Link>
+
+                        <button
+                          type="button"
+                          onClick={() => signOut({ callbackUrl: "/" })}
+                          className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/10 px-4 py-2.5 text-sm font-medium text-white/80 transition-all duration-300 hover:border-white/20 hover:text-white"
+                        >
+                          <FiLogOut size={16} />
+                          Log out
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      className="animate-fade-up mt-2 flex items-center justify-center gap-3 border-t border-white/10 px-4 pt-3"
+                      style={{
+                        animationDelay: `${0.05 + NavLinks.length * 0.05}s`,
+                      }}
                     >
-                      <FiShoppingBag size={18} />
-                    </Link>
-                  </div>
+                      <Link
+                        href="/login"
+                        onClick={closeMenus}
+                        className="flex flex-1 items-center justify-center gap-2 rounded-full border border-white/10 px-4 py-2.5 text-sm font-medium text-white/80 transition-all duration-300 hover:border-white/20 hover:text-white"
+                      >
+                        <FiUser size={17} />
+                        <span>Login</span>
+                      </Link>
+
+                      <CartButton onNavigate={closeMenus} />
+                    </div>
+                  )}
                 </div>
               </div>
             )}
           </div>
         )}
 
-        {isDashboard && isDrawerOpen && (
-          <div
-            className="fixed inset-0 z-50"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Dashboard menu"
-          >
-            {/* Backdrop */}
-            <div
-              className="animate-backdrop-in absolute inset-0 bg-black/40 backdrop-blur-xs"
-              onClick={closeMenus}
-            />
-
-            <div className="animate-drawer-in absolute inset-y-0 left-0 flex w-64 md:w-68 max-w-[85vw] flex-col bg-white shadow-2xl">
-              <div className="flex items-center justify-between border-b border-gray-200 p-5">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-gray-900">
-                    {customer?.name ?? "My account"}
-                  </p>
-                  <p className="truncate text-xs text-gray-500">
-                    {customer?.email}
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={closeMenus}
-                  aria-label="Close menu"
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
-                >
-                  <FiX className="h-5 w-5" />
-                </button>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-5">
-                <nav>
-                  <ul className="flex flex-col gap-1.5">
-                    {sidebarLinks?.map(link => {
-                      const isActive = pathname === link.path;
-
-                      return (
-                        <li key={link.path}>
-                          <Link
-                            href={link.path}
-                            onClick={closeMenus}
-                            aria-current={isActive ? "page" : undefined}
-                            className={`flex items-center gap-3 rounded-full px-4 py-3 text-sm font-medium transition-colors duration-200 ${
-                              isActive
-                                ? "bg-primary-orange text-black"
-                                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                            }`}
-                          >
-                            {link.icon}
-                            {link.label}
-                          </Link>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </nav>
-
-                <button
-                  type="button"
-                  className="mt-3 flex items-center gap-3 rounded-full px-4 py-3 text-[15px] font-semibold cursor-pointer transition-colors duration-200 text-red-500"
-                >
-                  <FiLogOut className="h-4 w-4" />
-                  Log out
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <DashboardDrawer
+          isOpen={isDrawerOpen && isDashboard}
+          pathname={pathname}
+          user={user}
+          customer={customer}
+          onClose={closeMenus}
+        />
       </div>
     </nav>
   );
