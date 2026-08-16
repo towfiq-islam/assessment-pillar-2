@@ -13,10 +13,6 @@ export default function CheckoutPage() {
   const { status } = useSession();
   const items = useCartStore(state => state.items);
   const router = useRouter();
-
-  // Only ever redirect an empty cart away on the FIRST render (e.g. arriving
-  // at /checkout directly). Placing an order also empties the cart, so this
-  // must never fire later — that's why it's a one-time check.
   const initialCheckDone = useRef(false);
 
   useEffect(() => {
@@ -34,8 +30,6 @@ export default function CheckoutPage() {
     }
   }, [items, router]);
 
-  // Wait for the session before rendering anything so unauthenticated users
-  // never see the checkout form.
   if (status !== "authenticated") {
     return null;
   }

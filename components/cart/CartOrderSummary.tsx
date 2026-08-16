@@ -30,21 +30,18 @@ export function CartOrderSummary({ variant = "cart" }: CartOrderSummaryProps) {
       router.push(`/login?callbackUrl=${encodeURIComponent("/checkout")}`);
       return;
     }
-
     router.push("/checkout");
   };
 
   const handlePlaceOrder = () => {
     const order = placeOrder(items);
-
     if (!order) return;
-
     toast.success("Order confirmed successfully");
     router.push(`/order-complete?order=${order.id}`);
   };
 
   const isCheckoutVariant = variant === "checkout";
-
+  
   return (
     <aside className="animate-fade-up rounded-xl border border-gray-200 bg-white p-4 md:p-5 shadow-sm">
       {/* Header */}

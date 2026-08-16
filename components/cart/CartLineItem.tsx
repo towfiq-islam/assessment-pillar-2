@@ -13,7 +13,6 @@ export function CartLineItem({ item, index = 0 }: CartLineItemProps) {
   const { product, quantity } = item;
   const updateQty = useCartStore(state => state.updateQty);
   const removeFromCart = useCartStore(state => state.removeFromCart);
-
   const maxQty = product.stock;
   const atMaxQty = quantity >= maxQty;
 
