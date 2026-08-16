@@ -13,6 +13,7 @@ import {
 } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
 
 type AuthMode = "login" | "signup";
 
@@ -50,8 +51,10 @@ export default function AuthPage() {
 
   const password = watch("password");
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
+  const onSubmit = () => {
+    toast.error(
+      "Email/password sign-in isn't available yet. Please continue with Google.",
+    );
   };
 
   const inputClass = (hasError: boolean) =>
@@ -163,10 +166,7 @@ export default function AuthPage() {
                     type="text"
                     placeholder="John Doe"
                     className={inputClass(!!errors.name)}
-                    {...register("name", {
-                      required: true,
-                      minLength: 2,
-                    })}
+                    {...register("name", { required: true })}
                   />
                 </div>
               </div>
@@ -188,13 +188,7 @@ export default function AuthPage() {
                   type="email"
                   placeholder="you@example.com"
                   className={inputClass(!!errors.email)}
-                  {...register("email", {
-                    required: true,
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: "Invalid email",
-                    },
-                  })}
+                  {...register("email", { required: true })}
                 />
               </div>
             </div>

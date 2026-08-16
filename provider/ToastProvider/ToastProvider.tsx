@@ -12,10 +12,10 @@ export default function ToastProvider() {
         duration: 4000,
         style: {
           background: "#ffffff",
-          color: "#111827",
+          color: "#222",
           border: "1px solid #e5e7eb",
           borderRadius: "8px",
-          padding: "14px 16px",
+          padding: "12px 14px",
           fontSize: "15px",
           fontWeight: "600",
           boxShadow:
@@ -24,7 +24,7 @@ export default function ToastProvider() {
 
         success: {
           iconTheme: {
-            primary: "#274f45",
+            primary: "#fd853a",
             secondary: "#ffffff",
           },
         },
