@@ -1,5 +1,4 @@
 import "./globals.css";
-import ReduxProvider from "@/provider/ReduxProvider/ReduxProvider";
 import type { Metadata } from "next";
 import { Urbanist } from "next/font/google";
 import ToastProvider from "@/provider/ToastProvider/ToastProvider";
@@ -29,10 +28,8 @@ export default function RootLayout({
     <html lang="en" className={`${urbanist.variable} antialiased`}>
       <body>
         <AuthProvider>
-          <ReduxProvider>
-            <ToastProvider />
-            {children}
-          </ReduxProvider>
+          <ToastProvider />
+          {children}
         </AuthProvider>
       </body>
     </html>

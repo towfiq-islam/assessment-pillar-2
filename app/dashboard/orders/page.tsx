@@ -1,8 +1,11 @@
+"use client";
 import SectionTitle from "@/components/common/SectionTitle";
 import { RecentOrders } from "@/components/dashboard/RecentOrders";
-import { customerOrders } from "@/components/data/customer";
+import { useOrdersStore } from "@/store/ordersStore";
 
 export default function OrdersPage() {
+  const orders = useOrdersStore(state => state.orders);
+
   return (
     <div>
       <div className="mb-5 md:mb-6">
@@ -11,12 +14,12 @@ export default function OrdersPage() {
         </SectionTitle>
 
         <p className="mt-0.5 md:mt-1 xl:mt-2 text-gray-500 text-sm md:text-base">
-          All orders placed on your account.
+          Orders placed from your account.
         </p>
       </div>
 
       <RecentOrders
-        orders={customerOrders}
+        orders={orders}
         title="All Orders"
         showViewAll={false}
       />

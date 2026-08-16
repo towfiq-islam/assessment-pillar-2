@@ -8,7 +8,6 @@ import {
   FiGrid,
   FiLogOut,
   FiMenu,
-  FiShoppingBag,
   FiUser,
   FiX,
 } from "react-icons/fi";
@@ -17,6 +16,7 @@ import { NavLinks, type NavLink } from "@/components/data/navLinks";
 import { DashboardDrawer } from "@/shared/DashboardDrawer";
 import { ProfileDropdown } from "@/components/common/ProfileDropdown";
 import type { CustomerProfile } from "@/types/customer";
+import { CartButton } from "@/components/common/CartButton";
 
 export type NavbarUser = {
   name?: string | null;
@@ -93,6 +93,7 @@ export function ProfileAvatar({
   );
 }
 
+
 interface NavbarProps {
   customer?: CustomerProfile;
   user?: NavbarUser;
@@ -161,13 +162,7 @@ export default function Navbar({ customer, user }: NavbarProps) {
             </Link>
           )}
 
-          <Link
-            href="/cart"
-            aria-label="Shopping cart"
-            className="relative flex size-9.5 xl:size-10 items-center justify-center rounded-full bg-primary-orange text-white shadow-[0_4px_20px_rgba(255,107,53,0.25)] transition-[transform,box-shadow] duration-300 hover:scale-105 hover:shadow-[0_6px_25px_rgba(255,107,53,0.4)] active:scale-95"
-          >
-            <FiShoppingBag size={18} />
-          </Link>
+          <CartButton />
         </div>
       </div>
 
@@ -249,14 +244,7 @@ export default function Navbar({ customer, user }: NavbarProps) {
                           </p>
                         </div>
 
-                        <Link
-                          href="/cart"
-                          onClick={closeMenus}
-                          aria-label="Shopping cart"
-                          className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-orange text-white shadow-[0_4px_20px_rgba(255,107,53,0.25)] transition-transform duration-200 active:scale-90"
-                        >
-                          <FiShoppingBag size={18} />
-                        </Link>
+                        <CartButton onNavigate={closeMenus} />
                       </div>
 
                       <div className="mt-2 flex items-center gap-3">
@@ -295,14 +283,7 @@ export default function Navbar({ customer, user }: NavbarProps) {
                         <span>Login</span>
                       </Link>
 
-                      <Link
-                        href="/cart"
-                        onClick={closeMenus}
-                        aria-label="Shopping cart"
-                        className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-orange text-white shadow-[0_4px_20px_rgba(255,107,53,0.25)] transition-transform duration-200 active:scale-90"
-                      >
-                        <FiShoppingBag size={18} />
-                      </Link>
+                      <CartButton onNavigate={closeMenus} />
                     </div>
                   )}
                 </div>

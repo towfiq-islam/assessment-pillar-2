@@ -1,10 +1,12 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { FiAlertTriangle, FiPackage, FiRefreshCw } from "react-icons/fi";
 import { ProductCard } from "@/components/common/ProductCard";
 import ProductCardSkeleton from "@/components/common/ProductCardSkeleton";
 import SectionTitle from "@/components/common/SectionTitle";
 import type { Product } from "@/types/product";
+import { useCartStore } from "@/store/cartStore";
 type FetchStatus = "loading" | "success" | "error";
 const FILTERS = ["All", "Laptops", "Accessories", "Monitors"];
 
@@ -14,6 +16,12 @@ const AllProducts = () => {
   const [activeFilter, setActiveFilter] = useState("All");
   const [retryCount, setRetryCount] = useState(0);
   const filterTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const addToCart = useCartStore(state => state.addToCart);
+
+  const handleAddToCart = (product: Product) => {
+    addToCart(product);
+    toast.success(`${product.name} added to cart`);
+  };
 
   useEffect(() => {
     let ignore = false;
@@ -210,7 +218,7 @@ const AllProducts = () => {
               className="animate-scale-in"
               style={{ animationDelay: `${Math.min(index * 0.05, 0.4)}s` }}
             >
-              <ProductCard product={product} />
+              <ProductCard product={product} onAddToCart={handleAddToCart} />
             </div>
           ))}
         </div>

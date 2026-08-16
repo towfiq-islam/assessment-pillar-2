@@ -30,20 +30,30 @@ export function RecentOrders({
       </div>
 
       {/* Desktop header row */}
-      <div className="hidden grid-cols-[1fr_1fr_0.7fr_1fr_auto] gap-4 border-b border-gray-200 pb-3 text-xs uppercase tracking-wide text-gray-400 sm:grid">
-        <span>Order</span>
-        <span>Date</span>
-        <span>Items</span>
-        <span className="text-right">Total</span>
-      </div>
+      {orders.length > 0 && (
+        <div className="hidden grid-cols-[1fr_1fr_0.7fr_1fr_auto] gap-4 border-b border-gray-200 pb-3 text-xs uppercase tracking-wide text-gray-400 sm:grid">
+          <span>Order</span>
+          <span>Date</span>
+          <span>Items</span>
+          <span className="text-right">Total</span>
+        </div>
+      )}
 
-      <ul>
-        {orders.map(order => (
+      {orders.length === 0 ? (
+        <div className="py-12 text-center">
+          <p className="text-sm font-medium text-gray-900">No orders yet</p>
+          <p className="mt-1 text-sm text-gray-500">
+            Add items to your cart and checkout to see them here.
+          </p>
+        </div>
+      ) : (
+        <ul>
+          {orders.map(order => (
           <li
             key={order.id}
             className="border-b border-gray-100 py-3 md:py-4 last:border-b-0 sm:grid sm:grid-cols-[1fr_1fr_0.7fr_1fr_auto] sm:items-center sm:gap-4"
           >
-            {/* Mobile layout: stacked card */}
+            {/* Mobile */}
             <div className="flex items-start justify-between sm:hidden">
               <div>
                 <p className="font-medium text-gray-900">{order.id}</p>
@@ -60,7 +70,7 @@ export function RecentOrders({
               </div>
             </div>
 
-            {/* Desktop layout: grid row */}
+            {/* Desktop */}
             <span className="hidden font-medium text-gray-900 sm:inline">
               {order.id}
             </span>
@@ -85,7 +95,8 @@ export function RecentOrders({
             </Link>
           </li>
         ))}
-      </ul>
+        </ul>
+      )}
     </div>
   );
 }

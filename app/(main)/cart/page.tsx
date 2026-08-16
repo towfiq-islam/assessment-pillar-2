@@ -1,22 +1,41 @@
 "use client";
-import { cartItems } from "@/components/data/cart";
 import Link from "next/link";
-import { FiShoppingBag } from "react-icons/fi";
+import toast from "react-hot-toast";
+import { FiShoppingBag, FiTrash2 } from "react-icons/fi";
 import SectionTitle from "@/components/common/SectionTitle";
 import { CartLineItem } from "@/components/cart/CartLineItem";
 import { CartOrderSummary } from "@/components/cart/CartOrderSummary";
+import { useCartStore } from "@/store/cartStore";
 
 export default function CartPage() {
-  const isEmpty = cartItems.length === 0;
+  const items = useCartStore(state => state.items);
+  const clearCart = useCartStore(state => state.clearCart);
+  const isEmpty = items.length === 0;
+
+  const handleClearCart = () => {
+    clearCart();
+    toast.success("Cart cleared");
+  };
 
   return (
     <div className="container pt-7 md:pt-10 xl:pt-12 pb-10 md:pb-16 xl:pb-20">
       <div className="max-w-5xl mx-auto">
         <div className="mb-5 md:mb-7">
-          <div className="animate-fade-up">
+          <div className="animate-fade-up flex flex-wrap items-center justify-between gap-3">
             <SectionTitle>
               Your <span className="text-orange-500">Cart</span>
             </SectionTitle>
+
+            {!isEmpty && (
+              <button
+                type="button"
+                onClick={handleClearCart}
+                className="flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-50 cursor-pointer"
+              >
+                <FiTrash2 className="h-3.5 w-3.5" />
+                Clear cart
+              </button>
+            )}
           </div>
 
           <p
@@ -31,10 +50,12 @@ export default function CartPage() {
           <EmptyCart />
         ) : (
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 items-start">
-            <div className="rounded-xl border border-gray-200 bg-white shadow-sm lg:col-span-2 overflow-hidden">
-              {cartItems.map((item, index) => (
-                <CartLineItem key={item.product.id} item={item} index={index} />
-              ))}
+            <div className="lg:col-span-2">
+              <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+                {items.map((item, index) => (
+                  <CartLineItem key={item.product.id} item={item} index={index} />
+                ))}
+              </div>
             </div>
 
             {/* Order Summary */}

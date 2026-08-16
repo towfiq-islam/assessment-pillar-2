@@ -2,17 +2,20 @@
 import SectionTitle from "@/components/common/SectionTitle";
 import { RecentOrders } from "@/components/dashboard/RecentOrders";
 import { StatCard } from "@/components/dashboard/StatCard";
-import { customer, customerOrders } from "@/components/data/customer";
+import { customer } from "@/components/data/customer";
 import { FiClock, FiDollarSign, FiPackage } from "react-icons/fi";
+import { useOrdersStore } from "@/store/ordersStore";
 
 export default function DashboardOverviewPage() {
-  const totalOrders = customerOrders.length;
+  const orders = useOrdersStore(state => state.orders);
 
-  const pendingOrders = customerOrders.filter(
+  const totalOrders = orders.length;
+
+  const pendingOrders = orders.filter(
     o => o.status === "Processing" || o.status === "Shipped",
   ).length;
 
-  const totalSpent = customerOrders
+  const totalSpent = orders
     .filter(o => o.status !== "Cancelled")
     .reduce((sum, o) => sum + o.total, 0);
 
@@ -51,7 +54,7 @@ export default function DashboardOverviewPage() {
         />
       </div>
 
-      <RecentOrders orders={customerOrders.slice(0, 4)} />
+      <RecentOrders orders={orders.slice(0, 4)} />
     </div>
   );
 }
