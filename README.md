@@ -82,8 +82,6 @@ implementation and production-ready frontend architecture.
 
 ---
 
----
-
 ## 7. Bonus Features Completed
 
 - Edge-level route protection
@@ -148,5 +146,3 @@ npm run dev
 
 Run `npm run dev` to start the project locally. The app will run on
 **http://localhost:3000**
-
----
