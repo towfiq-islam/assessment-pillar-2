@@ -160,7 +160,7 @@ export default function Navbar({ customer, user }: NavbarProps) {
 
       {/* Mobile */}
       <div className="lg:hidden relative max-w-[94%] mx-auto">
-        <div className="nav-fade flex items-center justify-between rounded-full bg-secondary-black text-white px-3 py-2">
+        <div className="nav-fade relative z-40 flex items-center justify-between rounded-full bg-secondary-black text-white px-3 py-2">
           <Link href="/" className="flex items-center gap-2.5">
             <Image
               src={logo}
@@ -199,6 +199,14 @@ export default function Navbar({ customer, user }: NavbarProps) {
             </button>
           </div>
         </div>
+
+        {!isDashboard && isMenuOpen && (
+          <div
+            className="fixed inset-0 z-30"
+            onClick={closeMenus}
+            aria-hidden="true"
+          />
+        )}
 
         {!isDashboard && (
           <div className="absolute inset-x-0 top-full z-40 mt-2">

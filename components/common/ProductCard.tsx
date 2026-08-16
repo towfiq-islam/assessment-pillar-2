@@ -75,7 +75,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
               ? `${product.name} is out of stock`
               : `Add ${product.name} to cart`
           }
-          className={`mt-1 flex w-full items-center justify-center gap-2 rounded-full py-2 md:py-3 text-xs hover:scale-95 duration-300 md:text-sm font-semibold transition-colors disabled:cursor-not-allowed ${
+          className={`mt-1 flex w-full items-center justify-center gap-2 rounded-full py-2 md:py-3 text-xs md:text-sm font-semibold disabled:cursor-not-allowed ${
             justAdded
               ? "bg-orange-600 text-white cursor-pointer"
               : isOutOfStock
