@@ -1,11 +1,39 @@
 "use client";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { FiArrowLeft } from "react-icons/fi";
 import { ShippingForm } from "@/components/checkout/ShippingForm";
 import { CartOrderSummary } from "@/components/cart/CartOrderSummary";
 import SectionTitle from "@/components/common/SectionTitle";
+import { useCartStore } from "@/store/cartStore";
 
 export default function CheckoutPage() {
+  const { status } = useSession();
+  const items = useCartStore(state => state.items);
+  const router = useRouter();
+  const initialCheckDone = useRef(false);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace(`/login?callbackUrl=${encodeURIComponent("/checkout")}`);
+    }
+  }, [status, router]);
+
+  useEffect(() => {
+    if (initialCheckDone.current) return;
+    initialCheckDone.current = true;
+
+    if (items.length === 0) {
+      router.replace("/cart");
+    }
+  }, [items, router]);
+
+  if (status !== "authenticated") {
+    return null;
+  }
+
   return (
     <main className="container pt-8 md:pt-10 pb-10 md:pb-16">
       <div className="mx-auto max-w-5xl">
@@ -37,7 +65,7 @@ export default function CheckoutPage() {
           </div>
 
           <div className="lg:col-span-1">
-            <CartOrderSummary />
+            <CartOrderSummary variant="checkout" />
           </div>
         </div>
       </div>

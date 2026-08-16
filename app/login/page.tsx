@@ -1,16 +1,20 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import {
   FiArrowLeft,
   FiEye,
   FiEyeOff,
+  FiLoader,
   FiLock,
   FiMail,
   FiUser,
 } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
+import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
 
 type AuthMode = "login" | "signup";
 
@@ -23,9 +27,20 @@ type FormValues = {
 };
 
 export default function AuthPage() {
+  return (
+    <Suspense fallback={null}>
+      <AuthForm />
+    </Suspense>
+  );
+}
+
+function AuthForm() {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const [mode, setMode] = useState<AuthMode>("login");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const isLogin = mode === "login";
 
   const {
@@ -47,8 +62,10 @@ export default function AuthPage() {
 
   const password = watch("password");
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
+  const onSubmit = () => {
+    toast.error(
+      "Email/password sign-in isn't available yet. Please continue with Google.",
+    );
   };
 
   const inputClass = (hasError: boolean) =>
@@ -66,6 +83,18 @@ export default function AuthPage() {
     setShowPassword(false);
     setShowConfirmPassword(false);
     reset();
+  };
+
+  const handleGoogleLogin = async () => {
+    setIsGoogleLoading(true);
+
+    try {
+      await signIn("google", {
+        callbackUrl,
+      });
+    } finally {
+      setIsGoogleLoading(false);
+    }
   };
 
   return (
@@ -148,10 +177,7 @@ export default function AuthPage() {
                     type="text"
                     placeholder="John Doe"
                     className={inputClass(!!errors.name)}
-                    {...register("name", {
-                      required: true,
-                      minLength: 2,
-                    })}
+                    {...register("name", { required: true })}
                   />
                 </div>
               </div>
@@ -173,13 +199,7 @@ export default function AuthPage() {
                   type="email"
                   placeholder="you@example.com"
                   className={inputClass(!!errors.email)}
-                  {...register("email", {
-                    required: true,
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: "Invalid email",
-                    },
-                  })}
+                  {...register("email", { required: true })}
                 />
               </div>
             </div>
@@ -244,9 +264,7 @@ export default function AuthPage() {
                 <div className={wrapperClass(!!errors.confirmPassword)}>
                   <FiLock
                     className={`shrink-0 ${
-                      errors.confirmPassword
-                        ? "text-red-400"
-                        : "text-gray-400"
+                      errors.confirmPassword ? "text-red-400" : "text-gray-400"
                     }`}
                   />
 
@@ -262,9 +280,7 @@ export default function AuthPage() {
 
                   <button
                     type="button"
-                    onClick={() =>
-                      setShowConfirmPassword(!showConfirmPassword)
-                    }
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     aria-label={
                       showConfirmPassword ? "Hide password" : "Show password"
                     }
@@ -289,10 +305,16 @@ export default function AuthPage() {
 
             <button
               type="button"
-              className="mt-3 flex w-full cursor-pointer items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white py-2.5 text-sm font-semibold text-gray-700 transition-[transform,border-color,background-color] duration-200 hover:border-gray-300 hover:bg-gray-50 active:scale-[0.98]"
+              onClick={handleGoogleLogin}
+              disabled={isGoogleLoading}
+              className="mt-3 flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-gray-200 bg-white py-2.5 text-sm font-semibold text-gray-700 transition-[transform,border-color,background-color] duration-200 hover:border-gray-300 hover:bg-gray-50 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <FcGoogle className="h-5 w-5" />
-              Continue with Google
+              {isGoogleLoading ? (
+                <FiLoader className="h-5 w-5 animate-spin text-gray-500" />
+              ) : (
+                <FcGoogle className="h-5 w-5" />
+              )}
+              {isGoogleLoading ? "Signing in..." : "Continue with Google"}
             </button>
           </form>
         </div>
