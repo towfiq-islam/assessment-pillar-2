@@ -5,8 +5,8 @@ import AllProducts from "@/components/home/AllProducts";
 const page = () => {
   return (
     <>
-      <Hero />
-      <Services />
+      {/* <Hero />
+      <Services /> */}
       <AllProducts />
     </>
   );

@@ -10,7 +10,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
-  const inStock = product.stock > 0;
+  const isOutOfStock = product.stock === 0;
+  const isLowStock = !isOutOfStock && product.stock < 5;
   const [justAdded, setJustAdded] = useState(false);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   }, [justAdded]);
 
   function handleAddToCart() {
-    if (!inStock) return;
+    if (isOutOfStock) return;
     onAddToCart?.(product);
     setJustAdded(true);
   }
@@ -35,13 +36,19 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           className="object-contain transition-transform duration-500 group-hover:scale-105"
         />
 
-        <span
-          className={`absolute left-1.5 md:left-3 top-1.5 md:top-3 rounded-full px-2 md:px-3 py-0.5 md:py-1 text-[10px] md:text-xs font-medium shadow-sm ${
-            inStock ? "bg-white text-gray-900" : "bg-gray-900/80 text-white"
-          }`}
-        >
-          {inStock ? `${product.stock} in stock` : "Sold out"}
-        </span>
+        {isOutOfStock && (
+          <span className="absolute left-1.5 md:left-3 top-1.5 md:top-3 inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2 md:px-3 py-0.5 md:py-1 text-[10px] md:text-xs font-medium text-red-600 shadow-sm">
+            <span className="size-1.5 md:size-2 rounded-full bg-red-500" />
+            Out of stock
+          </span>
+        )}
+
+        {isLowStock && (
+          <span className="absolute left-1.5 md:left-3 top-1.5 md:top-3 inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2 md:px-3 py-0.5 md:py-1 text-[10px] md:text-xs font-medium text-amber-600 shadow-sm">
+            <span className="size-1.5 md:size-2 rounded-full bg-amber-400" />
+            Low Stock
+          </span>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col gap-0.5 md:gap-1 xl:gap-2 pt-0 p-2.5 md:p-4">
@@ -62,18 +69,18 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         <button
           type="button"
           onClick={handleAddToCart}
-          disabled={!inStock}
+          disabled={isOutOfStock}
           aria-label={
-            inStock
-              ? `Add ${product.name} to cart`
-              : `${product.name} is out of stock`
+            isOutOfStock
+              ? `${product.name} is out of stock`
+              : `Add ${product.name} to cart`
           }
           className={`mt-1 flex w-full items-center justify-center gap-2 rounded-full py-2 md:py-3 text-xs md:text-sm font-semibold transition-colors duration-200 disabled:cursor-not-allowed ${
             justAdded
               ? "bg-green-500 text-white"
-              : inStock
-                ? "bg-orange-500 text-white hover:bg-orange-600 hover:shadow-md hover:shadow-orange-500/20 cursor-pointer"
-                : "bg-gray-100 text-gray-400"
+              : isOutOfStock
+                ? "bg-gray-100 text-gray-400"
+                : "bg-orange-500 text-white hover:bg-orange-600 hover:shadow-md hover:shadow-orange-500/20 cursor-pointer"
           }`}
         >
           <span
@@ -88,7 +95,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
             ) : (
               <>
                 <FiShoppingCart className="h-4 w-4" />
-                {inStock ? "Add to cart" : "Out of stock"}
+                {isOutOfStock ? "Out of Stock" : "Add to cart"}
               </>
             )}
           </span>

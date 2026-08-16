@@ -1,18 +1,92 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { FiAlertTriangle, FiPackage, FiRefreshCw } from "react-icons/fi";
 import { ProductCard } from "@/components/common/ProductCard";
+import ProductCardSkeleton from "@/components/common/ProductCardSkeleton";
 import SectionTitle from "@/components/common/SectionTitle";
-import { products } from "@/components/data/products";
-const FILTERS = ["All", "Laptops", "Accessories", "Monitors"] as const;
-type Filter = (typeof FILTERS)[number];
+import type { Product } from "@/types/product";
+type FetchStatus = "loading" | "success" | "error";
+const FILTERS = ["All", "Laptops", "Accessories", "Monitors"];
 
 const AllProducts = () => {
-  const [activeFilter, setActiveFilter] = useState<Filter>("All");
+  const [status, setStatus] = useState<FetchStatus>("loading");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [activeFilter, setActiveFilter] = useState("All");
+  const [retryCount, setRetryCount] = useState(0);
+  const filterTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const filteredProducts = useMemo(() => {
-    if (activeFilter === "All") return products;
-    return products.filter(product => product.category === activeFilter);
-  }, [activeFilter]);
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadProducts() {
+      try {
+        const res = await fetch("/api/products");
+
+        if (!res.ok) {
+          throw new Error(`Request failed with status ${res.status}`);
+        }
+
+        const data: unknown = await res.json();
+
+        if (!Array.isArray(data)) {
+          throw new Error("Unexpected response format");
+        }
+
+        if (!ignore) {
+          setProducts(data as Product[]);
+          setActiveFilter("All");
+          setStatus("success");
+        }
+      } catch {
+        if (!ignore) {
+          setProducts([]);
+          setStatus("error");
+        }
+      }
+    }
+
+    loadProducts();
+
+    return () => {
+      ignore = true;
+    };
+  }, [retryCount]);
+
+  useEffect(() => {
+    return () => {
+      if (filterTimerRef.current) {
+        clearTimeout(filterTimerRef.current);
+      }
+    };
+  }, []);
+
+  const handleFilterChange = (filter: string) => {
+    if (filterTimerRef.current) {
+      clearTimeout(filterTimerRef.current);
+    }
+    setActiveFilter(filter);
+    setStatus("loading");
+    filterTimerRef.current = setTimeout(() => {
+      filterTimerRef.current = null;
+      setStatus("success");
+    }, 500);
+  };
+
+  const handleRetry = () => {
+    if (filterTimerRef.current) {
+      clearTimeout(filterTimerRef.current);
+      filterTimerRef.current = null;
+    }
+    setStatus("loading");
+    setRetryCount(count => count + 1);
+  };
+
+  const filteredProducts =
+    activeFilter === "All"
+      ? products
+      : products.filter(product => product.category === activeFilter);
+
+  const hasProducts = products.length > 0;
 
   return (
     <section className="container pt-7 md:pt-8 lg:pt-12 xl:pt-16 pb-10 md:pb-14 xl:pb-20">
@@ -41,7 +115,7 @@ const AllProducts = () => {
               <button
                 key={filter}
                 type="button"
-                onClick={() => setActiveFilter(filter)}
+                onClick={() => handleFilterChange(filter)}
                 className={`relative rounded-full px-3 md:px-4 py-1.5 md:py-2 text-sm font-medium transition-colors duration-200 cursor-pointer ${
                   isActive
                     ? "text-white"
@@ -59,17 +133,88 @@ const AllProducts = () => {
         </div>
       </div>
 
-      <div className="grid gap-3 md:gap-5 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filteredProducts.map((product, index) => (
-          <div
-            key={product.id}
-            className="animate-scale-in"
-            style={{ animationDelay: `${Math.min(index * 0.05, 0.4)}s` }}
+      {/* Loading */}
+      {status === "loading" && (
+        <div
+          aria-busy="true"
+          aria-label="Loading products"
+          className="grid gap-3 md:gap-5 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        >
+          {Array.from({ length: 8 }).map((_, index) => (
+            <ProductCardSkeleton key={index} />
+          ))}
+        </div>
+      )}
+
+      {/* Error */}
+      {status === "error" && (
+        <div className="animate-fade-in flex flex-col items-center justify-center rounded-xl md:rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-14 md:py-20 text-center shadow-sm">
+          <span className="flex size-12 md:size-14 items-center justify-center rounded-full bg-red-50">
+            <FiAlertTriangle className="size-6 md:size-7 text-red-500" />
+          </span>
+
+          <h3 className="mt-4 md:mt-5 text-lg md:text-xl font-semibold text-gray-900">
+            Failed to load products
+          </h3>
+
+          <p className="mt-1.5 md:mt-2 max-w-md text-sm md:text-[15px] leading-6 text-gray-500">
+            We couldn&apos;t fetch the product catalog right now. Please check
+            your connection and try again.
+          </p>
+
+          <button
+            type="button"
+            onClick={handleRetry}
+            className="mt-5 md:mt-6 inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary-orange px-5 md:px-6 py-2.5 md:py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-orange-600"
           >
-            <ProductCard product={product} />
-          </div>
-        ))}
-      </div>
+            <FiRefreshCw className="size-4" />
+            Retry
+          </button>
+        </div>
+      )}
+
+      {/* Empty */}
+      {status === "success" && filteredProducts.length === 0 && (
+        <div className="animate-fade-in flex flex-col items-center justify-center rounded-xl md:rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-14 md:py-20 text-center shadow-sm">
+          <span className="flex size-12 md:size-14 items-center justify-center rounded-full bg-gray-100">
+            <FiPackage className="size-6 md:size-7 text-gray-400" />
+          </span>
+
+          <h3 className="mt-4 md:mt-5 text-lg md:text-xl font-semibold text-gray-900">
+            {hasProducts ? "No products in this category" : "No products found"}
+          </h3>
+
+          <p className="mt-1.5 md:mt-2 max-w-md text-sm md:text-[15px] leading-6 text-gray-500">
+            {hasProducts
+              ? "There are no products matching the selected filter. Try another category."
+              : "The catalog is currently empty. Check back soon — new products are on the way."}
+          </p>
+
+          <button
+            type="button"
+            onClick={handleRetry}
+            className="mt-5 md:mt-6 inline-flex cursor-pointer items-center gap-2 rounded-full bg-primary-orange px-5 md:px-6 py-2.5 md:py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-orange-600"
+          >
+            <FiRefreshCw className="size-4" />
+            Refresh
+          </button>
+        </div>
+      )}
+
+      {/* Products */}
+      {status === "success" && filteredProducts.length > 0 && (
+        <div className="grid gap-3 md:gap-5 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredProducts.map((product, index) => (
+            <div
+              key={product.id}
+              className="animate-scale-in"
+              style={{ animationDelay: `${Math.min(index * 0.05, 0.4)}s` }}
+            >
+              <ProductCard product={product} />
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 };
