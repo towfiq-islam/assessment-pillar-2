@@ -1,11 +1,11 @@
 import React from "react";
 import Footer from "@/shared/Footer";
-import Navbar from "@/shared/Navbar";
+import ServerNavbar from "@/shared/ServerNavbar";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      <Navbar />
+      <ServerNavbar />
       <main>{children}</main>
       <Footer />
     </>
