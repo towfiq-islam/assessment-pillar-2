@@ -116,7 +116,7 @@ function FooterColumn({
         {links.map(link => (
           <li key={link.label}>
             <Link
-              href={link.label}
+              href={link?.path}
               className="text-sm hover:underline text-white/70 transition-colors hover:text-white"
             >
               {link.label}
