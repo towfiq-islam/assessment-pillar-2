@@ -7,22 +7,3 @@ export interface Product {
   image: string;
 }
 
-export type ProductCategory = Product["category"];
-
-export interface ProductsApiResponse {
-  success: true;
-  count: number;
-  products: Product[];
-}
-
-export interface ProductsApiError {
-  success: false;
-  error: string;
-}
-
-export type ProductsApiResult = ProductsApiResponse | ProductsApiError;
-
-export interface ProductsQuery {
-  category?: string;
-  inStock?: boolean;
-}

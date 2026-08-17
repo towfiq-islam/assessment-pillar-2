@@ -5,9 +5,3 @@ export interface CartItem {
   quantity: number;
 }
 
-export interface CartSummary {
-  subtotal: number;
-  shipping: number;
-  taxRate: number;
-  discount: number;
-}
