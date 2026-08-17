@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
-import { FiGrid, FiLogOut, FiMenu, FiUser, FiX } from "react-icons/fi";
+import { FiGrid, FiLoader, FiLogOut, FiMenu, FiUser, FiX } from "react-icons/fi";
 import logo from "@/assets/logo.png";
 import { NavLinks, type NavLink } from "@/components/data/navLinks";
 import { DashboardDrawer } from "@/shared/DashboardDrawer";
 import { ProfileDropdown } from "@/components/common/ProfileDropdown";
 import { CartButton } from "@/components/common/CartButton";
+import { useLogout } from "@/hooks/useLogout";
 
 export type NavbarUser = {
   name?: string | null;
@@ -95,6 +95,7 @@ export default function Navbar({ user }: NavbarProps) {
   const isDashboard = pathname.startsWith("/dashboard");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { isLogoutPending, handleLogout } = useLogout();
 
   const closeMenus = () => {
     setIsMenuOpen(false);
@@ -260,11 +261,16 @@ export default function Navbar({ user }: NavbarProps) {
 
                         <button
                           type="button"
-                          onClick={() => signOut({ callbackUrl: "/" })}
-                          className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-white/80 transition-all duration-300 hover:border-white/20 hover:text-white"
+                          onClick={handleLogout}
+                          disabled={isLogoutPending}
+                          className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-white/80 transition-all duration-300 hover:border-white/20 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                          <FiLogOut size={16} />
-                          Log out
+                          {isLogoutPending ? (
+                            <FiLoader size={16} className="animate-spin" />
+                          ) : (
+                            <FiLogOut size={16} />
+                          )}
+                          {isLogoutPending ? "Logging out..." : "Log out"}
                         </button>
                       </div>
                     </div>

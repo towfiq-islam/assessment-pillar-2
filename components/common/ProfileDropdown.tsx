@@ -2,24 +2,21 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
-import { FiChevronDown, FiGrid, FiLogOut } from "react-icons/fi";
+import { FiChevronDown, FiGrid, FiLoader, FiLogOut } from "react-icons/fi";
 import { ProfileAvatar, type NavbarUser } from "@/shared/Navbar";
+import { useLogout } from "@/hooks/useLogout";
 
 export function ProfileDropdown({ user }: { user: NavbarUser }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [prevPathname, setPrevPathname] = useState(pathname);
+  const { isLogoutPending, handleLogout } = useLogout();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   if (prevPathname !== pathname) {
     setPrevPathname(pathname);
     setIsOpen(false);
   }
-
-  const handleLogout = () => {
-    signOut({ callbackUrl: "/" });
-  };
 
   useEffect(() => {
     const handleWindowClick = () => {
@@ -82,10 +79,15 @@ export function ProfileDropdown({ user }: { user: NavbarUser }) {
             <button
               type="button"
               onClick={handleLogout}
-              className="flex cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-red-500 transition-colors duration-200 hover:bg-red-50"
+              disabled={isLogoutPending}
+              className="flex cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-red-500 transition-colors duration-200 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <FiLogOut className="h-4 w-4" />
-              Log out
+              {isLogoutPending ? (
+                <FiLoader className="h-4 w-4 animate-spin" />
+              ) : (
+                <FiLogOut className="h-4 w-4" />
+              )}
+              {isLogoutPending ? "Logging out..." : "Log out"}
             </button>
           </div>
         </div>

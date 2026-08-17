@@ -1,8 +1,9 @@
+"use client";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
-import { FiLogOut, FiX } from "react-icons/fi";
+import { FiLoader, FiLogOut, FiX } from "react-icons/fi";
 import { sidebarLinks } from "@/components/dashboard/dashboardLinks";
 import { ProfileAvatar, type NavbarUser } from "@/shared/Navbar";
+import { useLogout } from "@/hooks/useLogout";
 
 interface DashboardDrawerProps {
   isOpen: boolean;
@@ -17,11 +18,9 @@ export function DashboardDrawer({
   user,
   onClose,
 }: DashboardDrawerProps) {
-  if (!isOpen) return null;
+  const { isLogoutPending, handleLogout } = useLogout();
 
-  const handleLogout = () => {
-    signOut({ callbackUrl: "/" });
-  };
+  if (!isOpen) return null;
 
   return (
     <div
@@ -87,10 +86,15 @@ export function DashboardDrawer({
           <button
             type="button"
             onClick={handleLogout}
-            className="mt-3 flex items-center gap-3 rounded-full px-4 py-3 text-[15px] font-semibold cursor-pointer transition-colors duration-200 text-red-500"
+            disabled={isLogoutPending}
+            className="mt-3 flex items-center gap-3 rounded-full px-4 py-3 text-[15px] font-semibold cursor-pointer transition-colors duration-200 text-red-500 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <FiLogOut className="h-4 w-4" />
-            Log out
+            {isLogoutPending ? (
+              <FiLoader className="h-4 w-4 animate-spin" />
+            ) : (
+              <FiLogOut className="h-4 w-4" />
+            )}
+            {isLogoutPending ? "Logging out..." : "Log out"}
           </button>
         </div>
       </div>
