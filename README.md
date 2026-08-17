@@ -2,7 +2,7 @@
 
 ## 1. Description:
 
-A modern, responsive mini e-commerce site built with Next.js(v16) and
+A modern, responsive mini e-commerce site built with Next.js-v16 and
 TypeScript, featuring Google OAuth authentication, product inventory management,
 and a global cart system. The project focuses on pixel-accurate Figma
 implementation and production-ready frontend architecture.
@@ -27,7 +27,7 @@ implementation and production-ready frontend architecture.
 - Google OAuth authentication with NextAuth.js
 - **Fast, Lightweight & SEO-Optimized** – Built for high GTmetrix and Lighthouse
   scores (100%).
-- Protected dashboard routes with middleware (Proxy.ts)
+- Protected dashboard routes with middleware (proxy.ts) 
 - Internal mock Product API with TypeScript data types
 - Inventory status handling: Out of Stock, Low Stock, and Normal Stock
 - Global cart management with Zustand

@@ -105,7 +105,7 @@ export function CartOrderSummary({ variant = "cart" }: CartOrderSummaryProps) {
         type="button"
         onClick={isCheckoutVariant ? handlePlaceOrder : handleCheckout}
         disabled={loading}
-        className="mt-4 md:mt-5 cursor-pointer flex w-full items-center justify-center gap-2 rounded-full bg-orange-500 py-2.5 font-semibold text-white hover:scale-95 duration-300 transition-transform hover:shadow-lg hover:shadow-orange-500/20 disabled:cursor-not-allowed disabled:opacity-70"
+        className="mt-4 md:mt-5 cursor-pointer flex w-full items-center justify-center gap-2 rounded-full bg-orange-500 py-2.5 font-semibold text-white hover:scale-95 duration-400 transition-transform hover:shadow-lg hover:shadow-orange-500/20 disabled:cursor-not-allowed disabled:opacity-70"
       >
         {loading ? (
           <FiLoader className="h-4 w-4 animate-spin" />
