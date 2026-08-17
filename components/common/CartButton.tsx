@@ -2,13 +2,12 @@ import { selectCartCount, useCartStore } from "@/store/cartStore";
 import Link from "next/link";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 
-export function CartButton({ onNavigate }: { onNavigate?: () => void }) {
+export function CartButton() {
   const cartCount = useCartStore(selectCartCount);
 
   return (
     <Link
       href="/cart"
-      onClick={onNavigate}
       aria-label="Shopping cart"
       className="relative flex size-9.5 xl:size-10 shrink-0 items-center justify-center rounded-full border border-transparent md:border-gray-700 text-white duration-300 text-2xl md:text-xl"
     >
