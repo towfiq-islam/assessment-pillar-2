@@ -10,7 +10,6 @@ export const taxRate = 0.08;
 interface OrdersState {
   orders: CustomerOrder[];
   placeOrder: (items: CartItem[]) => CustomerOrder | null;
-  clearOrders: () => void;
 }
 
 export const useOrdersStore = create<OrdersState>()(
@@ -47,7 +46,6 @@ export const useOrdersStore = create<OrdersState>()(
         return order;
       },
 
-      clearOrders: () => set({ orders: [] }),
     }),
     {
       name: "orders",
