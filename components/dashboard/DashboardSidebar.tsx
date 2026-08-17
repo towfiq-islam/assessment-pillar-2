@@ -5,20 +5,18 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { FiLogOut } from "react-icons/fi";
 import { ProfileAvatar, type NavbarUser } from "@/shared/Navbar";
-import type { CustomerProfile } from "@/types/customer";
 import { sidebarLinks } from "./dashboardLinks";
 
 interface DashboardSidebarProps {
-  customer: CustomerProfile;
   user?: NavbarUser;
 }
 
-export function DashboardSidebar({ customer, user }: DashboardSidebarProps) {
+export function DashboardSidebar({ user }: DashboardSidebarProps) {
   const pathname = usePathname();
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
-  const avatar = user?.image ?? customer.avatar;
-  const name = user?.name ?? customer.name;
-  const email = user?.email ?? customer.email;
+  const avatar = user?.image;
+  const name = user?.name ?? "My account";
+  const email = user?.email;
 
   useEffect(() => {
     if (!isLogoutOpen) return;
@@ -90,13 +88,11 @@ export function DashboardSidebar({ customer, user }: DashboardSidebarProps) {
           aria-modal="true"
           aria-label="Confirm logout"
         >
-          {/* Backdrop */}
           <div
             className="animate-backdrop-in absolute inset-0 bg-black/50"
             onClick={() => setIsLogoutOpen(false)}
           />
 
-          {/* Card */}
           <div className="animate-pop-in relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-50">
               <FiLogOut className="h-6 w-6 text-red-500" />

@@ -9,7 +9,6 @@ import logo from "@/assets/logo.png";
 import { NavLinks, type NavLink } from "@/components/data/navLinks";
 import { DashboardDrawer } from "@/shared/DashboardDrawer";
 import { ProfileDropdown } from "@/components/common/ProfileDropdown";
-import type { CustomerProfile } from "@/types/customer";
 import { CartButton } from "@/components/common/CartButton";
 
 export type NavbarUser = {
@@ -88,11 +87,10 @@ export function ProfileAvatar({
 }
 
 interface NavbarProps {
-  customer?: CustomerProfile;
   user?: NavbarUser;
 }
 
-export default function Navbar({ customer, user }: NavbarProps) {
+export default function Navbar({ user }: NavbarProps) {
   const pathname = usePathname();
   const isDashboard = pathname.startsWith("/dashboard");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -297,7 +295,6 @@ export default function Navbar({ customer, user }: NavbarProps) {
           isOpen={isDrawerOpen && isDashboard}
           pathname={pathname}
           user={user}
-          customer={customer}
           onClose={closeMenus}
         />
       </div>

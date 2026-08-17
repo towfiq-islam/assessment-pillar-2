@@ -1,10 +1,10 @@
 "use client";
 import dynamic from "next/dynamic";
+import { useSession } from "next-auth/react";
 import { FiClock, FiDollarSign, FiPackage } from "react-icons/fi";
 import SectionTitle from "@/components/common/SectionTitle";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { RecentOrdersSkeleton } from "@/components/dashboard/RecentOrdersSkeleton";
-import { customer } from "@/components/data/customer";
 import { useOrdersStore } from "@/store/ordersStore";
 
 const RecentOrders = dynamic(
@@ -17,6 +17,8 @@ const RecentOrders = dynamic(
 );
 
 export default function DashboardOverviewPage() {
+  const { data: session } = useSession();
+  const firstName = session?.user?.name?.split(" ")[0];
   const orders = useOrdersStore(state => state.orders);
   const totalOrders = orders.length;
   const pendingOrders = orders.filter(
@@ -31,10 +33,14 @@ export default function DashboardOverviewPage() {
     <div>
       <div className="mb-5 md:mb-6">
         <SectionTitle>
-          Welcome back,{" "}
-          <span className="text-primary-orange">
-            {customer.name.split(" ")[0]}
-          </span>
+          {firstName ? (
+            <>
+              Welcome back,{" "}
+              <span className="text-primary-orange">{firstName}</span>
+            </>
+          ) : (
+            "Welcome back"
+          )}
         </SectionTitle>
 
         <p className="mt-0.5 md:mt-1 xl:mt-2 text-gray-500 text-sm md:text-base">

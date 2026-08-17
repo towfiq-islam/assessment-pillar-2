@@ -3,13 +3,11 @@ import { signOut } from "next-auth/react";
 import { FiLogOut, FiX } from "react-icons/fi";
 import { sidebarLinks } from "@/components/dashboard/dashboardLinks";
 import { ProfileAvatar, type NavbarUser } from "@/shared/Navbar";
-import type { CustomerProfile } from "@/types/customer";
 
 interface DashboardDrawerProps {
   isOpen: boolean;
   pathname: string;
   user?: NavbarUser;
-  customer?: CustomerProfile;
   onClose: () => void;
 }
 
@@ -17,7 +15,6 @@ export function DashboardDrawer({
   isOpen,
   pathname,
   user,
-  customer,
   onClose,
 }: DashboardDrawerProps) {
   if (!isOpen) return null;
@@ -41,19 +38,13 @@ export function DashboardDrawer({
 
       <div className="animate-drawer-in absolute inset-y-0 left-0 flex w-64 md:w-68 max-w-[85vw] flex-col bg-white shadow-2xl">
         <div className="flex items-center gap-3 border-b border-gray-200 p-5">
-          <ProfileAvatar
-            image={user?.image}
-            name={user?.name ?? customer?.name}
-            size={40}
-          />
+          <ProfileAvatar image={user?.image} name={user?.name} size={40} />
 
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold text-gray-900">
-              {user?.name ?? customer?.name ?? "My account"}
+              {user?.name ?? "My account"}
             </p>
-            <p className="truncate text-xs text-gray-500">
-              {user?.email ?? customer?.email}
-            </p>
+            <p className="truncate text-xs text-gray-500">{user?.email}</p>
           </div>
 
           <button

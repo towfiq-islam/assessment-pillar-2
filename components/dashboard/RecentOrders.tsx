@@ -29,7 +29,6 @@ export function RecentOrders({
         )}
       </div>
 
-      {/* Desktop header row */}
       {orders.length > 0 && (
         <div className="hidden grid-cols-[1fr_1fr_0.7fr_1fr_auto] gap-4 border-b border-gray-200 pb-3 text-xs uppercase tracking-wide text-gray-400 sm:grid">
           <span>Order</span>

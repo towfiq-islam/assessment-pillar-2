@@ -1,5 +1,5 @@
 import SectionTitle from "@/components/common/SectionTitle";
-import { customerAddresses } from "@/components/data/customer";
+import { customerAddresses } from "@/components/data/addresses";
 import { FiEdit2, FiPlus, FiTrash2, FiUser } from "react-icons/fi";
 
 export default function AddressesPage() {
