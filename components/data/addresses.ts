@@ -1,12 +1,4 @@
-import type { Address, CustomerProfile } from "@/types/customer";
-
-export const customer: CustomerProfile = {
-  name: "Jenny Wilson",
-  email: "jenny.wilson@example.com",
-  avatar: "/assets/images/customer-avatar.jpg",
-  memberSince: "March 2023",
-  defaultAddress: "123 Product Ave, San Francisco, CA 94103",
-};
+import type { Address } from "@/types/customer";
 
 export const customerAddresses: Address[] = [
   {

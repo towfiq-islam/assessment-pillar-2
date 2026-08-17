@@ -1,13 +1,12 @@
 import { auth } from "@/auth";
 import SectionTitle from "@/components/common/SectionTitle";
-import { customer } from "@/components/data/customer";
 import type { ReactNode } from "react";
 import { FiLock, FiMail, FiUser } from "react-icons/fi";
 
 export default async function SettingsPage() {
   const session = await auth();
-  const name = session?.user?.name ?? customer.name;
-  const email = session?.user?.email ?? customer.email;
+  const name = session?.user?.name ?? "My account";
+  const email = session?.user?.email ?? "";
 
   return (
     <div>

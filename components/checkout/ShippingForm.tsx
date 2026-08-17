@@ -26,10 +26,7 @@ export function ShippingForm() {
             />
           </div>
 
-          <div
-            className="animate-fade-up"
-            style={{ animationDelay: "0.08s" }}
-          >
+          <div className="animate-fade-up" style={{ animationDelay: "0.08s" }}>
             <Field
               label="Phone number"
               icon={<FiPhone />}
@@ -39,10 +36,7 @@ export function ShippingForm() {
           </div>
         </div>
 
-        <div
-          className="animate-fade-up"
-          style={{ animationDelay: "0.16s" }}
-        >
+        <div className="animate-fade-up" style={{ animationDelay: "0.16s" }}>
           <Field
             label="Email address"
             icon={<FiMail />}
@@ -147,7 +141,7 @@ function ShippingOption({
           type="radio"
           name="shipping-method"
           defaultChecked={defaultChecked}
-          className="h-4 w-4 accent-orange-500"
+          className="h-4 w-4 accent-primary-orange"
         />
         <div>
           <p className="text-sm font-medium text-gray-900">{name}</p>

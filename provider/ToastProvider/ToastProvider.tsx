@@ -9,7 +9,7 @@ export default function ToastProvider() {
         zIndex: 99999,
       }}
       toastOptions={{
-        duration: 2000,
+        duration: 1500,
         style: {
           background: "#ffffff",
           color: "#222",

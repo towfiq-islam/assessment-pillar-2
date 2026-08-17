@@ -8,14 +8,6 @@ export interface CustomerOrder {
   status: OrderStatus;
 }
 
-export interface CustomerProfile {
-  name: string;
-  email: string;
-  avatar: string;
-  memberSince: string;
-  defaultAddress: string;
-}
-
 export interface Address {
   id: string;
   label: string;
@@ -23,4 +15,3 @@ export interface Address {
   line: string;
   isDefault: boolean;
 }
-

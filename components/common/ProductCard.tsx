@@ -69,7 +69,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         <button
           type="button"
           onClick={handleAddToCart}
-          disabled={isOutOfStock}
+          disabled={isOutOfStock || justAdded}
           aria-label={
             isOutOfStock
               ? `${product.name} is out of stock`

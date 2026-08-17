@@ -2,23 +2,22 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
-import { FiLogOut } from "react-icons/fi";
+import { FiLoader, FiLogOut } from "react-icons/fi";
 import { ProfileAvatar, type NavbarUser } from "@/shared/Navbar";
-import type { CustomerProfile } from "@/types/customer";
 import { sidebarLinks } from "./dashboardLinks";
+import { useLogout } from "@/hooks/useLogout";
 
 interface DashboardSidebarProps {
-  customer: CustomerProfile;
   user?: NavbarUser;
 }
 
-export function DashboardSidebar({ customer, user }: DashboardSidebarProps) {
+export function DashboardSidebar({ user }: DashboardSidebarProps) {
   const pathname = usePathname();
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
-  const avatar = user?.image ?? customer.avatar;
-  const name = user?.name ?? customer.name;
-  const email = user?.email ?? customer.email;
+  const { isLogoutPending, handleLogout } = useLogout();
+  const avatar = user?.image;
+  const name = user?.name ?? "My account";
+  const email = user?.email;
 
   useEffect(() => {
     if (!isLogoutOpen) return;
@@ -30,10 +29,6 @@ export function DashboardSidebar({ customer, user }: DashboardSidebarProps) {
       document.body.style.overflow = original;
     };
   }, [isLogoutOpen]);
-
-  const handleConfirmLogout = () => {
-    signOut({ callbackUrl: "/" });
-  };
 
   return (
     <aside className="h-fit">
@@ -90,13 +85,11 @@ export function DashboardSidebar({ customer, user }: DashboardSidebarProps) {
           aria-modal="true"
           aria-label="Confirm logout"
         >
-          {/* Backdrop */}
           <div
             className="animate-backdrop-in absolute inset-0 bg-black/50"
             onClick={() => setIsLogoutOpen(false)}
           />
 
-          {/* Card */}
           <div className="animate-pop-in relative w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-50">
               <FiLogOut className="h-6 w-6 text-red-500" />
@@ -121,10 +114,14 @@ export function DashboardSidebar({ customer, user }: DashboardSidebarProps) {
 
               <button
                 type="button"
-                onClick={handleConfirmLogout}
-                className="flex-1 cursor-pointer rounded-full bg-red-500 py-2.5 text-sm font-semibold text-white transition-[transform,background-color] duration-200 hover:bg-red-600 active:scale-[0.98]"
+                onClick={handleLogout}
+                disabled={isLogoutPending}
+                className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-red-500 py-2.5 text-sm font-semibold text-white transition-[transform,background-color] duration-200 hover:bg-red-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
               >
-                Log out
+                {isLogoutPending && (
+                  <FiLoader className="h-4 w-4 animate-spin" />
+                )}
+                {isLogoutPending ? "Logging out..." : "Log out"}
               </button>
             </div>
           </div>

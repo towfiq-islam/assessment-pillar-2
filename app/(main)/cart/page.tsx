@@ -21,7 +21,7 @@ export default function CartPage() {
         <div className="mb-5 md:mb-7">
           <div className="animate-fade-up flex flex-wrap items-center justify-between gap-3">
             <SectionTitle>
-              Your <span className="text-orange-500">Cart</span>
+              Your <span className="text-primary-orange">Cart</span>
             </SectionTitle>
 
             {!isEmpty && (
