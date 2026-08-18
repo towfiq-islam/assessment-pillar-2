@@ -110,11 +110,14 @@ keeping the application architecture simple and maintainable.
 
 ---
 
-## 9. Lighthouse Report:
+## 9. Lighthouse Report
 
-The production build was tested using Google Lighthouse.
+The production build was tested using Google Lighthouse on both desktop and
+mobile configurations.
 
-![Lighthouse Report](./docs/lighthouse-report.png)
+| Desktop | Mobile |
+|---|---|
+| ![Lighthouse Desktop Report](./docs/lighthourse_report_mobile.png) | ![Lighthouse Mobile Report](./docs/lighthouse-report_desktop.png) |
 
 ---
 
