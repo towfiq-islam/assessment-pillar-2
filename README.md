@@ -112,12 +112,11 @@ keeping the application architecture simple and maintainable.
 
 ## 9. Lighthouse Report
 
-The production build was tested using Google Lighthouse on both desktop and
-mobile configurations.
+The production build was tested using Google Lighthouse on both desktop and mobile configurations.
 
-| Desktop | Mobile |
-|---|---|
-| ![Lighthouse Desktop Report](./docs/lighthourse_report_mobile.png) | ![Lighthouse Mobile Report](./docs/lighthouse-report_desktop.png) |
+| 🖥️ Desktop | 📱 Mobile |
+|:---:|:---:|
+| <img src="./docs/lighthouse-report_desktop.png" width="500" /> | <img src="./docs/lighthourse_report_mobile.png" width="500" /> |
 
 ---
 
